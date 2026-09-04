@@ -135,7 +135,7 @@
             transform: scale(0.92);
         }
 
-        /* ===== SECTION DIVIDER (pembatas antar slide) ===== */
+        /* ===== SECTION DIVIDER ===== */
         section {
             scroll-margin-top: 80px;
         }
@@ -251,7 +251,7 @@
             transform: scale(0.92) translateY(0px);
         }
 
-        /* ===== HERO IMAGE / AVATAR with 3D flip ===== */
+        /* ===== HERO IMAGE / AVATAR 3D ===== */
         .hero-visual {
             display: flex;
             justify-content: center;
@@ -535,7 +535,7 @@
             display: block;
         }
 
-        /* ===== TWO IMAGES WITH FLIP / TURN ===== */
+        /* ===== TWO IMAGES FLIP ===== */
         .image-showcase {
             padding: 60px 0;
         }
@@ -681,7 +681,6 @@
             margin-top: 4px;
         }
 
-        /* image card 2 different color */
         .image-card:nth-child(2) .img-front .mockup {
             background: rgba(100, 200, 255, 0.08);
             border-color: rgba(100, 200, 255, 0.15);
@@ -784,7 +783,7 @@
             letter-spacing: 0.05em;
         }
 
-        /* ===== CTA / CONTACT ===== */
+        /* ===== CONTACT ===== */
         .contact {
             padding: 60px 0 80px;
         }
@@ -863,19 +862,20 @@
             font-size: 0.8rem;
         }
 
-        /* ========================================================= */
-        /* ===== VERTICAL NAVBAR – SAMPING KANAN BAWAH ============= */
-        /* ========================================================= */
+        /* ============================================================ */
+        /* ===== VERTICAL NAVBAR – SAMPING KANAN TENGAH =============== */
+        /* ============================================================ */
         .vertical-nav {
             position: fixed;
             right: 24px;
-            bottom: 80px; /* agak ke atas dari bawah */
+            top: 50%;
+            transform: translateY(-50%);
             z-index: 999;
-            background: rgba(18, 21, 25, 0.8);
+            background: rgba(18, 21, 25, 0.75);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
             border-radius: 48px;
-            padding: 12px 10px;
+            padding: 14px 10px;
             border: 1px solid rgba(255, 255, 255, 0.06);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
             transition: var(--transition);
@@ -885,7 +885,7 @@
             list-style: none;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
             margin: 0;
             padding: 0;
         }
@@ -913,7 +913,7 @@
         }
 
         .vertical-nav ul li a .icon {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             line-height: 1;
         }
 
@@ -926,7 +926,6 @@
             margin-left: 0;
         }
 
-        /* Hover: tampilkan label */
         .vertical-nav ul li a:hover .label,
         .vertical-nav ul li a.active .label {
             opacity: 1;
@@ -948,7 +947,6 @@
             color: var(--accent);
         }
 
-        /* Efek saat scroll: sedikit transisi */
         .vertical-nav:hover {
             background: rgba(18, 21, 25, 0.92);
             border-color: rgba(232, 184, 94, 0.15);
@@ -986,11 +984,9 @@
             .contact-right {
                 justify-content: center;
             }
-            /* navbar vertikal tetap di kanan, ukuran lebih kecil */
             .vertical-nav {
                 right: 16px;
-                bottom: 60px;
-                padding: 10px 8px;
+                padding: 12px 8px;
                 border-radius: 40px;
             }
             .vertical-nav ul li a {
@@ -1040,19 +1036,20 @@
             }
             .vertical-nav {
                 right: 12px;
-                bottom: 40px;
-                padding: 8px 6px;
+                padding: 10px 6px;
                 border-radius: 36px;
+                top: 50%;
+                transform: translateY(-50%);
             }
             .vertical-nav ul li a {
                 padding: 5px 10px;
                 font-size: 0.65rem;
             }
             .vertical-nav ul li a .label {
-                display: none; /* di mobile sembunyikan label biar irit */
+                display: none;
             }
             .vertical-nav ul li a .icon {
-                font-size: 1rem;
+                font-size: 1.1rem;
             }
         }
 
@@ -1078,7 +1075,7 @@
 <body>
 
     <!-- ============================================================ -->
-    <!-- SLIDE 1: HEADER / NAVIGATION                                  -->
+    <!-- SLIDE 1: HEADER                                               -->
     <!-- ============================================================ -->
     <header>
         <div class="container nav-inner">
@@ -1088,11 +1085,10 @@
     </header>
 
     <!-- ============================================================ -->
-    <!-- SLIDE 2: HERO SECTION (id="hero")                            -->
+    <!-- SLIDE 2: HERO                                                 -->
     <!-- ============================================================ -->
     <section class="hero" id="hero">
         <div class="container hero-grid">
-
             <div class="hero-content">
                 <div class="badge">✦ Available for freelance</div>
                 <h1>
@@ -1134,12 +1130,11 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
 
     <!-- ============================================================ -->
-    <!-- SLIDE 3: PROJECTS (id="projects")                            -->
+    <!-- SLIDE 3: PROJECTS                                             -->
     <!-- ============================================================ -->
     <section class="projects" id="projects">
         <div class="container">
@@ -1152,7 +1147,6 @@
             </div>
 
             <div class="project-grid">
-
                 <div class="project-card bounce-trigger">
                     <span class="card-icon">🏍️</span>
                     <span class="num">01</span>
@@ -1188,7 +1182,6 @@
                         <span>CMS</span>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
@@ -1203,7 +1196,6 @@
             <p class="section-sub">Each card reveals a story on the back — smooth 3D transitions.</p>
 
             <div class="image-grid-2">
-
                 <div class="image-card" id="imgCard1">
                     <div class="image-inner">
                         <div class="img-front">
@@ -1245,7 +1237,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
@@ -1263,7 +1254,7 @@
     </section>
 
     <!-- ============================================================ -->
-    <!-- SLIDE 6: WORK PROCESS (id="process")                         -->
+    <!-- SLIDE 6: WORK PROCESS                                         -->
     <!-- ============================================================ -->
     <section class="process" id="process">
         <div class="container">
@@ -1272,7 +1263,6 @@
             <p class="section-sub">From insight to launch — every step is crafted with intention.</p>
 
             <div class="process-grid">
-
                 <div class="process-step bounce-trigger">
                     <span class="step-num">01</span>
                     <span class="step-icon">🎯</span>
@@ -1307,13 +1297,12 @@
                     <h5>Deliver</h5>
                     <p>Testing, optimizing, and launching with perfection.</p>
                 </div>
-
             </div>
         </div>
     </section>
 
     <!-- ============================================================ -->
-    <!-- SLIDE 7: CONTACT / CTA (id="contact")                        -->
+    <!-- SLIDE 7: CONTACT                                              -->
     <!-- ============================================================ -->
     <section class="contact" id="contact">
         <div class="container">
@@ -1363,7 +1352,7 @@
     </footer>
 
     <!-- ============================================================ -->
-    <!-- SLIDE 9: VERTICAL NAVBAR (SAMPING KANAN BAWAH)               -->
+    <!-- SLIDE 9: VERTICAL NAVBAR (SAMPING KANAN TENGAH)              -->
     <!-- ============================================================ -->
     <nav class="vertical-nav" id="verticalNav">
         <ul>
@@ -1375,7 +1364,7 @@
     </nav>
 
     <!-- ============================================================ -->
-    <!-- JAVASCRIPT – semua interaksi                                  -->
+    <!-- JAVASCRIPT                                                    -->
     <!-- ============================================================ -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -1399,7 +1388,7 @@
                 });
             });
 
-            // ---- 2. FLIP CARD (avatar) ----
+            // ---- 2. FLIP CARD ----
             const flipCard = document.getElementById('flipCard');
             if (flipCard) {
                 flipCard.addEventListener('click', function() {
@@ -1412,7 +1401,7 @@
                 });
             }
 
-            // ---- 3. TWO IMAGE CARDS — turn (3D flip) ----
+            // ---- 3. IMAGE CARDS ----
             const imgCard1 = document.getElementById('imgCard1');
             const imgCard2 = document.getElementById('imgCard2');
 
@@ -1428,19 +1417,10 @@
                 }
             }
 
-            if (imgCard1) {
-                imgCard1.addEventListener('click', function(e) {
-                    toggleImageCard(this);
-                });
-            }
+            if (imgCard1) imgCard1.addEventListener('click', function() { toggleImageCard(this); });
+            if (imgCard2) imgCard2.addEventListener('click', function() { toggleImageCard(this); });
 
-            if (imgCard2) {
-                imgCard2.addEventListener('click', function(e) {
-                    toggleImageCard(this);
-                });
-            }
-
-            // ---- 4. NAV CTA scroll ----
+            // ---- 4. NAV CTA ----
             const navCta = document.querySelector('.nav-cta');
             if (navCta) {
                 navCta.addEventListener('click', function() {
@@ -1448,7 +1428,7 @@
                 });
             }
 
-            // ---- 5. "See my work" button scroll ----
+            // ---- 5. "See my work" ----
             const seeWorkBtn = document.querySelector('.btn-primary');
             if (seeWorkBtn) {
                 seeWorkBtn.addEventListener('click', function() {
@@ -1456,7 +1436,7 @@
                 });
             }
 
-            // ---- 6. "Get in touch" button scroll ----
+            // ---- 6. "Get in touch" ----
             const getTouchBtn = document.querySelector('.btn-secondary');
             if (getTouchBtn) {
                 getTouchBtn.addEventListener('click', function() {
@@ -1464,7 +1444,7 @@
                 });
             }
 
-            // ---- 7. "Start a project" button ----
+            // ---- 7. "Start a project" ----
             const startBtn = document.querySelector('.contact-right .btn-primary');
             if (startBtn) {
                 startBtn.addEventListener('click', function() {
@@ -1481,15 +1461,13 @@
             }
 
             // ---- 9. Project cards feedback ----
-            document.querySelectorAll('.project-card').forEach((card, idx) => {
+            document.querySelectorAll('.project-card').forEach((card) => {
                 card.addEventListener('click', function() {
                     const title = this.querySelector('h4')?.textContent || 'Project';
                     console.log(`📁 ${title} — selected`);
                     this.style.transition = 'border-color 0.15s';
                     this.style.borderColor = 'var(--accent)';
-                    setTimeout(() => {
-                        this.style.borderColor = '';
-                    }, 400);
+                    setTimeout(() => { this.style.borderColor = ''; }, 400);
                 });
             });
 
@@ -1503,7 +1481,7 @@
             });
 
             // =========================================================
-            // 11. VERTICAL NAV – SCROLL SPY (highlight aktif)
+            // 11. VERTICAL NAV – SCROLL SPY
             // =========================================================
             const navLinks = document.querySelectorAll('.vertical-nav a');
             const sections = [
@@ -1515,7 +1493,7 @@
 
             function updateActiveLink() {
                 let current = '';
-                const scrollPos = window.scrollY + 120; // offset
+                const scrollPos = window.scrollY + 120;
 
                 sections.forEach(section => {
                     if (section) {
@@ -1538,7 +1516,7 @@
             window.addEventListener('scroll', updateActiveLink);
             window.addEventListener('load', updateActiveLink);
 
-            // ---- 12. Smooth scroll untuk nav link ----
+            // ---- 12. Smooth scroll nav link ----
             navLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -1547,13 +1525,12 @@
                     if (targetEl) {
                         targetEl.scrollIntoView({ behavior: 'smooth' });
                     }
-                    // update active setelah scroll
                     setTimeout(updateActiveLink, 100);
                 });
             });
 
             console.log('✨ All animations ready — tap, flip, bounce, and turn!');
-            console.log('🧭 Vertical navbar with Jaksel vibes activated.');
+            console.log('🧭 Vertical navbar now centered on the right side.');
         });
     </script>
 
