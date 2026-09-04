@@ -61,15 +61,27 @@
         }
 
         /* ============================================================ */
-        /* 2. SECTION BACKGROUND + OVERLAY                              */
+        /* 2. SECTION VIDEO BACKGROUND                                  */
         /* ============================================================ */
         section {
             position: relative;
             scroll-margin-top: 80px;
             padding: 60px 0;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            overflow: hidden;
+            /* biar video nggak keluar */
+        }
+
+        /* Video background */
+        .bg-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            pointer-events: none;
+            /* biar klik nggak ke video */
         }
 
         /* Overlay gelap biar teks jelas */
@@ -81,35 +93,13 @@
             right: 0;
             bottom: 0;
             background: rgba(11, 13, 15, 0.72);
-            z-index: 0;
+            z-index: 1;
             pointer-events: none;
         }
 
         section .container {
             position: relative;
-            z-index: 1;
-        }
-
-        /* ===== BACKGROUND TIAP SLIDE (LANGSUNG PAKAI UNSPLASH CDN) ===== */
-        /* Slide 1: Hero – gambar orang bekerja / laptop */
-        .bg-hero {
-            background-image: url('https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1920&q=80');
-        }
-        /* Slide 2: Projects – gambar meja kerja / kreatif */
-        .bg-projects {
-            background-image: url('https://pin.it/6tnHJw0UW‘);
-        }
-        /* Slide 3: Showcase – gambar abstrak / warna-warni */
-        .bg-showcase {
-            background-image: url('https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=1920&q=80');
-        }
-        /* Slide 4: Process – gambar diagram / alur */
-        .bg-process {
-            background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80');
-        }
-        /* Slide 5: Contact – gambar ruang / komunikasi */
-        .bg-contact {
-            background-image: url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1920&q=80');
+            z-index: 2;
         }
 
         /* ============================================================ */
@@ -1111,9 +1101,12 @@
     </header>
 
     <!-- ============================================================ -->
-    <!-- SLIDE 2: HERO (Background 1)                                  -->
+    <!-- SLIDE 2: HERO (Video 1: Big Buck Bunny)                      -->
     <!-- ============================================================ -->
-    <section class="hero bg-hero" id="hero">
+    <section class="hero" id="hero">
+        <video class="bg-video" autoplay loop muted playsinline>
+            <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" />
+        </video>
         <div class="container hero-grid">
             <div class="hero-content">
                 <div class="badge">✦ Available for freelance</div>
@@ -1160,9 +1153,12 @@
     </section>
 
     <!-- ============================================================ -->
-    <!-- SLIDE 3: PROJECTS (Background 2)                              -->
+    <!-- SLIDE 3: PROJECTS (Video 2: Elephant Dream)                   -->
     <!-- ============================================================ -->
-    <section class="projects bg-projects" id="projects">
+    <section class="projects" id="projects">
+        <video class="bg-video" autoplay loop muted playsinline>
+            <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantDream.mp4" type="video/mp4" />
+        </video>
         <div class="container">
             <div class="projects-header">
                 <div>
@@ -1213,9 +1209,12 @@
     </section>
 
     <!-- ============================================================ -->
-    <!-- SLIDE 4: SHOWCASE + QUOTE (Background 3)                     -->
+    <!-- SLIDE 4: SHOWCASE + QUOTE (Video 3: For Bigger Blazes)       -->
     <!-- ============================================================ -->
-    <section class="image-showcase bg-showcase" id="showcase">
+    <section class="image-showcase" id="showcase">
+        <video class="bg-video" autoplay loop muted playsinline>
+            <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4" />
+        </video>
         <div class="container">
             <div class="section-label">Interactive showcase</div>
             <h2 class="section-title">Tap an image to <span>turn</span> it</h2>
@@ -1265,7 +1264,6 @@
                 </div>
             </div>
 
-            <!-- Quote ditaruh di sini biar 1 slide dengan showcase -->
             <div class="quote-block" style="margin-top:60px; border:none; padding:40px 0 0 0;">
                 <blockquote>
                     “Good design is not just how it looks, <span>but how it works.</span>”
@@ -1276,9 +1274,12 @@
     </section>
 
     <!-- ============================================================ -->
-    <!-- SLIDE 5: WORK PROCESS (Background 4)                          -->
+    <!-- SLIDE 5: WORK PROCESS (Video 4: For Bigger Escapes)          -->
     <!-- ============================================================ -->
-    <section class="process bg-process" id="process">
+    <section class="process" id="process">
+        <video class="bg-video" autoplay loop muted playsinline>
+            <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4" type="video/mp4" />
+        </video>
         <div class="container">
             <div class="section-label">Work process</div>
             <h2 class="section-title">How I <span>create</span></h2>
@@ -1324,9 +1325,12 @@
     </section>
 
     <!-- ============================================================ -->
-    <!-- SLIDE 6: CONTACT (Background 5)                               -->
+    <!-- SLIDE 6: CONTACT (Video 5: For Bigger Fun)                   -->
     <!-- ============================================================ -->
-    <section class="contact bg-contact" id="contact">
+    <section class="contact" id="contact">
+        <video class="bg-video" autoplay loop muted playsinline>
+            <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4" type="video/mp4" />
+        </video>
         <div class="container">
             <div class="contact-inner">
                 <div class="contact-left">
@@ -1554,7 +1558,7 @@
             });
 
             console.log('✨ All animations ready — tap, flip, bounce, and turn!');
-            console.log('🧭 5 background images from Unsplash CDN applied.');
+            console.log('🎬 Now with video backgrounds!');
         });
     </script>
 
