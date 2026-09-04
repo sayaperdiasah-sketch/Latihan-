@@ -6,23 +6,13 @@
     <title>Full Screen Slides · Animasi Unik Tiap Slide</title>
 
     <!-- ============================================================ -->
-    <!-- ★ LINK ANIMASI DARI LO ★                                     -->
-    <!-- Ganti href di bawah dengan link CDN animasi favorit lo.      -->
-    <!-- Saat ini saya pakai Animate.css dari CDN.                    -->
+    <!-- ★ LINK ANIMASI DARI CDN (Animate.css)                        -->
     <!-- ============================================================ -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
-    <!-- 
-        ╔══════════════════════════════════════════════════════════════╗
-        ║  ★ TAMBAH LINK ANIMASI LAIN DI SINI ★                     ║
-        ║  <link rel="stylesheet" href="URL_ANIMASI_LO.css" />       ║
-        ║  atau <script src="URL_ANIMASI_LO.js"></script>            ║
-        ╚══════════════════════════════════════════════════════════════╝
-    -->
-
     <style>
         /* ============================================================ */
-        /* 1. RESET & BASE                                              */
+        /* RESET & BASE                                                  */
         /* ============================================================ */
         * {
             margin: 0;
@@ -41,7 +31,7 @@
         }
 
         /* ============================================================ */
-        /* 2. SLIDE FULL SCREEN (100vh) + SCROLL SNAP                   */
+        /* SLIDE FULL SCREEN + SCROLL SNAP                              */
         /* ============================================================ */
         .slides-wrapper {
             height: 100vh;
@@ -61,7 +51,7 @@
         }
 
         /* ============================================================ */
-        /* 3. VIDEO BACKGROUND + OVERLAY                                */
+        /* VIDEO BACKGROUND + OVERLAY                                   */
         /* ============================================================ */
         .bg-video {
             position: absolute;
@@ -103,7 +93,7 @@
         }
 
         /* ============================================================ */
-        /* 4. KONTEN                                                    */
+        /* KONTEN                                                        */
         /* ============================================================ */
         .content {
             position: relative;
@@ -194,14 +184,14 @@
         }
 
         /* ============================================================ */
-        /* 5. ANIMASI DASAR (biar semua elemen punya durasi sama)       */
+        /* ANIMASI DASAR                                                 */
         /* ============================================================ */
         .animate__animated {
             animation-duration: 1s;
         }
 
         /* ============================================================ */
-        /* 6. INDICATOR / NAVIGATOR                                     */
+        /* INDICATOR (navigasi bulat di samping)                        */
         /* ============================================================ */
         .slide-indicator {
             position: fixed;
@@ -242,7 +232,7 @@
         }
 
         /* ============================================================ */
-        /* 7. RESPONSIVE                                                */
+        /* RESPONSIVE                                                    */
         /* ============================================================ */
         @media (max-width: 768px) {
             .content h1 {
@@ -319,22 +309,16 @@
     <div class="slides-wrapper">
 
         <!-- ========================================================== -->
-        <!-- SLIDE 1: HERO – animasi: fadeIn + bounceIn                 -->
+        <!-- SLIDE 1: HERO – video: Big Buck Bunny                      -->
         <!-- ========================================================== -->
         <section class="slide" id="slide1">
-            <!-- VIDEO BACKGROUND (ganti src dengan link lo) -->
+            <!-- VIDEO BACKGROUND (GOOGLE SAMPLE – STABIL) -->
             <video class="bg-video" autoplay loop muted playsinline>
-                <source src="https://v1.pinimg.com/videos/iht/expMp4/e1/86/f2/e186f2586bfd10ea26ed87174309f8b4_720w.mp4" type="video/mp4" />
+                <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" />
             </video>
             <div class="fallback-bg"></div>
 
             <div class="content">
-                <!-- 
-                    ╔══════════════════════════════════════════════════════════════╗
-                    ║  SLIDE 1 – ANIMASI: fadeInDown + fadeIn + fadeInUp        ║
-                    ║  Ganti class animate__xxx dengan animasi dari library lo   ║
-                    ╚══════════════════════════════════════════════════════════════╝
-                -->
                 <div class="badge animate__animated animate__fadeInDown animate__delay-0.2s">
                     ✦ Available for freelance
                 </div>
@@ -359,7 +343,7 @@
         </section>
 
         <!-- ========================================================== -->
-        <!-- SLIDE 2: PROJECTS – animasi: slideInLeft + zoomIn          -->
+        <!-- SLIDE 2: PROJECTS – video: Elephant Dream                   -->
         <!-- ========================================================== -->
         <section class="slide" id="slide2">
             <video class="bg-video" autoplay loop muted playsinline>
@@ -368,11 +352,6 @@
             <div class="fallback-bg"></div>
 
             <div class="content">
-                <!-- 
-                    ╔══════════════════════════════════════════════════════════════╗
-                    ║  SLIDE 2 – ANIMASI: slideInLeft + zoomIn + fadeInUp       ║
-                    ╚══════════════════════════════════════════════════════════════╝
-                -->
                 <div class="badge animate__animated animate__slideInLeft animate__delay-0.2s">
                     📁 Selected projects
                 </div>
@@ -392,20 +371,15 @@
         </section>
 
         <!-- ========================================================== -->
-        <!-- SLIDE 3: SHOWCASE – animasi: flipInX + pulse               -->
+        <!-- SLIDE 3: SHOWCASE – video: For Bigger Blazes               -->
         <!-- ========================================================== -->
         <section class="slide" id="slide3">
             <video class="bg-video" autoplay loop muted playsinline>
-                <source src="https://v1.pinimg.com/videos/iht/expMp4/e1/86/f2/e186f2586bfd10ea26ed87174309f8b4_720w.mp4" type="video/mp4" />
+                <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4" />
             </video>
             <div class="fallback-bg"></div>
 
             <div class="content">
-                <!-- 
-                    ╔══════════════════════════════════════════════════════════════╗
-                    ║  SLIDE 3 – ANIMASI: flipInX + pulse + fadeInUp            ║
-                    ╚══════════════════════════════════════════════════════════════╝
-                -->
                 <div class="badge animate__animated animate__flipInX animate__delay-0.2s">
                     🖼️ Interactive showcase
                 </div>
@@ -424,7 +398,7 @@
         </section>
 
         <!-- ========================================================== -->
-        <!-- SLIDE 4: PROCESS – animasi: rotateIn + lightSpeedIn        -->
+        <!-- SLIDE 4: PROCESS – video: For Bigger Escapes               -->
         <!-- ========================================================== -->
         <section class="slide" id="slide4">
             <video class="bg-video" autoplay loop muted playsinline>
@@ -433,11 +407,6 @@
             <div class="fallback-bg"></div>
 
             <div class="content">
-                <!-- 
-                    ╔══════════════════════════════════════════════════════════════╗
-                    ║  SLIDE 4 – ANIMASI: rotateIn + lightSpeedIn + fadeInUp    ║
-                    ╚══════════════════════════════════════════════════════════════╝
-                -->
                 <div class="badge animate__animated animate__rotateIn animate__delay-0.2s">
                     🧠 Work process
                 </div>
@@ -459,7 +428,7 @@
         </section>
 
         <!-- ========================================================== -->
-        <!-- SLIDE 5: CONTACT – animasi: jackInTheBox + heartBeat       -->
+        <!-- SLIDE 5: CONTACT – video: For Bigger Fun                   -->
         <!-- ========================================================== -->
         <section class="slide" id="slide5">
             <video class="bg-video" autoplay loop muted playsinline>
@@ -468,11 +437,6 @@
             <div class="fallback-bg"></div>
 
             <div class="content">
-                <!-- 
-                    ╔══════════════════════════════════════════════════════════════╗
-                    ║  SLIDE 5 – ANIMASI: jackInTheBox + heartBeat + fadeInUp   ║
-                    ╚══════════════════════════════════════════════════════════════╝
-                -->
                 <div class="badge animate__animated animate__jackInTheBox animate__delay-0.2s">
                     📬 Let's connect
                 </div>
@@ -502,7 +466,7 @@
     <!-- end .slides-wrapper -->
 
     <!-- ============================================================ -->
-    <!-- INDICATOR                                                    -->
+    <!-- INDICATOR (navigasi bulat)                                    -->
     <!-- ============================================================ -->
     <nav class="slide-indicator" id="indicator">
         <a href="#slide1" class="active" title="Hero"></a>
@@ -557,21 +521,15 @@
                 });
             });
 
-            // ---- 3. RE-TRIGGER ANIMASI SAAT SLIDE MASUK (opsional) ----
-            // Biar animasi jalan ulang tiap kali slide muncul
+            // ---- 3. RE-TRIGGER ANIMASI SAAT SLIDE MASUK ----
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         const els = entry.target.querySelectorAll('.animate__animated');
                         els.forEach(el => {
-                            // reset animasi
                             el.classList.remove('animate__animated');
-                            // trigger reflow
                             void el.offsetWidth;
-                            // tambahin class lagi
                             el.classList.add('animate__animated');
-                            // ambil class animasi asli dari attribut data-animate (kalau ada)
-                            // atau biarin aja class-nya udah ada di HTML
                         });
                     }
                 });
@@ -580,11 +538,7 @@
             slides.forEach(slide => observer.observe(slide));
 
             console.log('✅ 5 slides with UNIQUE animations each!');
-            console.log('📌 Slide 1: fadeIn + bounceIn');
-            console.log('📌 Slide 2: slideInLeft + zoomIn');
-            console.log('📌 Slide 3: flipInX + pulse');
-            console.log('📌 Slide 4: rotateIn + lightSpeedIn');
-            console.log('📌 Slide 5: jackInTheBox + heartBeat');
+            console.log('📌 Video backgrounds from Google sample (stable).');
         });
     </script>
 
