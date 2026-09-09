@@ -3,203 +3,276 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>3D Viewer — scene.gltf</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet" />
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+    <title>✦ Tombol 3D Interaktif</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #f5f7fa;
-            color: #1e1e2a;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            width: 100%;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0 24px 0;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-        .logo {
-            font-weight: 700;
-            font-size: 1.25rem;
-            letter-spacing: -0.02em;
-            background: linear-gradient(135deg, #3b3bff, #8b5cf6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .logo span {
-            font-weight: 300;
-            -webkit-text-fill-color: #6b7280;
-        }
-        .badge {
-            font-size: 0.75rem;
-            background: #eef2ff;
-            color: #4f46e5;
-            padding: 4px 14px;
-            border-radius: 100px;
-            font-weight: 500;
-        }
-        .viewer-wrapper {
-            flex: 1;
-            margin: 28px 0 20px;
-            border-radius: 24px;
+            margin: 0;
             overflow: hidden;
-            background: #ffffff;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.06);
-            border: 1px solid rgba(0,0,0,0.04);
-            min-height: 480px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        model-viewer {
+        #info {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
             width: 100%;
-            height: 600px;
-            display: block;
-            background-color: #f0f2f5;
-        }
-        .info-panel {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-            padding: 12px 0 8px;
-            font-size: 0.9rem;
-            color: #4b5563;
-        }
-        .info-panel .instruction {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: #f9fafb;
-            padding: 6px 16px 6px 12px;
-            border-radius: 100px;
-            border: 1px solid #e5e7eb;
-        }
-        .info-panel .instruction code {
-            background: #e5e7eb;
-            padding: 2px 10px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            color: #1f2937;
-        }
-        .btn {
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
-            padding: 6px 16px;
-            border-radius: 100px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: #1f2937;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: inherit;
-        }
-        .btn:hover {
-            background: #f3f4f6;
-            border-color: #9ca3af;
-        }
-        .btn-primary {
-            background: #4f46e5;
-            border-color: #4f46e5;
-            color: white;
-        }
-        .btn-primary:hover {
-            background: #4338ca;
-        }
-        footer {
-            margin-top: 24px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(0,0,0,0.05);
             text-align: center;
-            font-size: 0.8rem;
-            color: #9ca3af;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 14px;
+            letter-spacing: 1px;
+            pointer-events: none;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            z-index: 10;
         }
-        @media (max-width: 640px) {
-            body { padding: 12px; }
-            model-viewer { height: 400px; }
-            .info-panel { flex-direction: column; align-items: flex-start; }
-            .info-panel .controls { width: 100%; justify-content: flex-start; }
-            header { flex-direction: column; align-items: flex-start; }
+        #status {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 10px 28px;
+            border-radius: 40px;
+            color: #fff;
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            pointer-events: none;
+            z-index: 10;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        #status.show {
+            opacity: 1;
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <header>
-        <div class="logo">3D Viewer <span>• scene.gltf</span></div>
-        <div class="badge">✦ interaktif</div>
-    </header>
-    <div class="viewer-wrapper">
-        <!-- LANGSUNG PAKAI scene.gltf -->
-        <model-viewer
-            id="model-viewer"
-            src="scene.gltf"
-            alt="Model 3D"
-            camera-controls
-            touch-action="pan-y"
-            auto-rotate
-            rotation-per-second="30deg"
-            interaction-prompt="auto"
-            shadow-intensity="0.6"
-            exposure="1.0"
-            environment-image="neutral"
-            style="background-color: #f0f2f5;"
-        >
-        </model-viewer>
-    </div>
-    <div class="info-panel">
-        <div class="instruction">
-            <span>📁 File yang digunakan:</span>
-            <code>scene.gltf</code> dan <code>scene.bin</code> (otomatis)
-        </div>
-        <div class="controls">
-            <button class="btn" id="btnReset">↺ Reset kamera</button>
-            <button class="btn btn-primary" id="btnToggleRotate">⏸️ Hentikan putar</button>
-        </div>
-    </div>
-    <footer>
-        Pastikan <strong>scene.gltf</strong> dan <strong>scene.bin</strong> berada di folder yang sama dengan index.html.
-    </footer>
-</div>
-<script>
-    (function() {
-        const viewer = document.getElementById('model-viewer');
-        if (!viewer) return;
-        document.getElementById('btnReset')?.addEventListener('click', () => {
-            viewer.cameraTarget = '0 0 0';
-            viewer.cameraOrbit = '0 0 2.5';
-            viewer.updateFraming();
+
+    <div id="status">✨ Tombol ditekan!</div>
+    <div id="info">🖱️ Klik tombolnya &bull; Geser untuk putar &bull; Gulung untuk zoom</div>
+
+    <!-- Memuat Three.js dari CDN (Tool 3D) -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module">
+        // ----- 1. IMPOR TOOL -----
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        // ----- 2. SETUP SCENE, CAMERA, RENDERER -----
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0a0a1a); // Biru tua elegan
+
+        // Kamera
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(4, 3, 6);
+        camera.lookAt(0, 0, 0);
+
+        // Renderer
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.2;
+        document.body.appendChild(renderer.domElement);
+
+        // Kontrol (bisa diputar)
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 2.0;
+        controls.minDistance = 2.5;
+        controls.maxDistance = 12;
+        controls.target.set(0, 0.2, 0);
+
+        // ----- 3. PENCIPTAAN CAHAYA (Biar kinclong) -----
+        // Cahaya ambient lembut
+        const ambientLight = new THREE.AmbientLight(0x404060);
+        scene.add(ambientLight);
+
+        // Cahaya utama dari depan
+        const mainLight = new THREE.DirectionalLight(0xffffff, 1.5);
+        mainLight.position.set(2, 5, 5);
+        mainLight.castShadow = true;
+        scene.add(mainLight);
+
+        // Cahaya pengisi dari belakang
+        const backLight = new THREE.DirectionalLight(0x7b6eff, 0.8);
+        backLight.position.set(-3, 1, -4);
+        scene.add(backLight);
+
+        // Lampu sorot warna-warni untuk efek
+        const colorLight = new THREE.PointLight(0xff4d6d, 0.6, 10);
+        colorLight.position.set(2, 1, 2);
+        scene.add(colorLight);
+
+        const colorLight2 = new THREE.PointLight(0x4d9eff, 0.6, 10);
+        colorLight2.position.set(-2, 0.5, 2);
+        scene.add(colorLight2);
+
+        // ----- 4. LANTAI BAYANGAN (Biar tombol kelihatan nempel) -----
+        const floorGeometry = new THREE.PlaneGeometry(8, 8);
+        const floorMaterial = new THREE.ShadowMaterial({ opacity: 0.3, color: 0x000000 });
+        const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+        floor.rotation.x = -Math.PI / 2;
+        floor.position.y = -0.5;
+        floor.receiveShadow = true;
+        scene.add(floor);
+
+        // ----- 5. BIKIN TOMBOL 3D (Objek utama) -----
+        const buttonGroup = new THREE.Group();
+        buttonGroup.position.y = 0;
+
+        // --- 5a. Base (Bawah) ---
+        const baseGeo = new THREE.CylinderGeometry(1.4, 1.4, 0.4, 48);
+        const baseMat = new THREE.MeshStandardMaterial({
+            color: 0x2a2a4a,
+            metalness: 0.85,
+            roughness: 0.25,
+            emissive: 0x111122,
+            emissiveIntensity: 0.1
         });
-        const toggleBtn = document.getElementById('btnToggleRotate');
-        let rotating = true;
-        toggleBtn?.addEventListener('click', () => {
-            rotating = !rotating;
-            viewer.autoRotate = rotating;
-            toggleBtn.textContent = rotating ? '⏸️ Hentikan putar' : '▶️ Putar otomatis';
+        const base = new THREE.Mesh(baseGeo, baseMat);
+        base.position.y = 0;
+        base.castShadow = true;
+        base.receiveShadow = true;
+        buttonGroup.add(base);
+
+        // Ring aksen (cincin di tengah base)
+        const ringGeo = new THREE.TorusGeometry(1.1, 0.06, 16, 48);
+        const ringMat = new THREE.MeshStandardMaterial({
+            color: 0x7b6eff,
+            metalness: 0.9,
+            roughness: 0.2,
+            emissive: 0x3b2bff,
+            emissiveIntensity: 0.2
         });
-        viewer.addEventListener('load', () => {
-            console.log('✅ Model scene.gltf berhasil dimuat!');
+        const ring = new THREE.Mesh(ringGeo, ringMat);
+        ring.position.y = 0.22;
+        ring.rotation.x = Math.PI / 2;
+        buttonGroup.add(ring);
+
+        // --- 5b. Tombol Atas (yang bisa ditekan) ---
+        const capGeo = new THREE.CylinderGeometry(0.9, 0.9, 0.35, 48);
+        const capMat = new THREE.MeshStandardMaterial({
+            color: 0x4f6ef7,
+            metalness: 0.3,
+            roughness: 0.4,
+            emissive: 0x1a2b9c,
+            emissiveIntensity: 0.15
         });
-    })();
-</script>
+        const cap = new THREE.Mesh(capGeo, capMat);
+        cap.position.y = 0.4;
+        cap.castShadow = true;
+        cap.receiveShadow = true;
+        buttonGroup.add(cap);
+
+        // --- 5c. Lampu indikator kecil di atas tombol ---
+        const ledGeo = new THREE.SphereGeometry(0.12, 16, 16);
+        const ledMat = new THREE.MeshStandardMaterial({
+            color: 0x00ff88,
+            emissive: 0x00ff88,
+            emissiveIntensity: 1.5,
+            metalness: 0.1,
+            roughness: 0.1
+        });
+        const led = new THREE.Mesh(ledGeo, ledMat);
+        led.position.set(0, 0.6, 0.7);
+        buttonGroup.add(led);
+
+        // Tambahkan group ke scene
+        scene.add(buttonGroup);
+
+        // Simpan referensi cap dan led untuk animasi
+        const buttonCap = cap;
+        const ledLight = led;
+
+        // ----- 6. INTERAKSI KLIK (Raycaster) -----
+        const raycaster = new THREE.Raycaster();
+        const pointer = new THREE.Vector2();
+
+        // Ambil elemen status
+        const statusEl = document.getElementById('status');
+
+        function onPointerDown(event) {
+            // Hitung posisi pointer (koordinat layar -1 sampai 1)
+            const rect = renderer.domElement.getBoundingClientRect();
+            pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+            raycaster.setFromCamera(pointer, camera);
+
+            // Cek apakah mengenai "cap" (tombol atas)
+            const intersects = raycaster.intersectObject(buttonCap);
+
+            if (intersects.length > 0) {
+                // ---- Tombol Ditekan! ----
+                // 1. Animasi turun
+                buttonCap.position.y = 0.25; // Turun
+                // 2. Ubah warna LED jadi merah
+                ledLight.material.color.setHex(0xff3366);
+                ledLight.material.emissive.setHex(0xff3366);
+                // 3. Tampilkan notifikasi
+                statusEl.textContent = '✨ Tombol ditekan!';
+                statusEl.classList.add('show');
+                // 4. Efek getar kecil (opsional)
+                buttonGroup.rotation.z = 0.03;
+                setTimeout(() => {
+                    buttonGroup.rotation.z = -0.03;
+                    setTimeout(() => {
+                        buttonGroup.rotation.z = 0;
+                    }, 50);
+                }, 50);
+
+                // Kembalikan ke posisi semula setelah 300ms
+                setTimeout(() => {
+                    buttonCap.position.y = 0.4; // Naik
+                    ledLight.material.color.setHex(0x00ff88);
+                    ledLight.material.emissive.setHex(0x00ff88);
+                    statusEl.classList.remove('show');
+                }, 300);
+            }
+        }
+
+        // Event listener klik
+        renderer.domElement.addEventListener('click', onPointerDown);
+
+        // ----- 7. RESPONSIF (Ukuran layar berubah) -----
+        window.addEventListener('resize', onWindowResize, false);
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        // ----- 8. LOOP ANIMASI -----
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Update kontrol (termasuk auto-rotate)
+            controls.update();
+
+            // Animasi LED berkedip pelan (efek hidup)
+            const time = Date.now() * 0.001;
+            ledLight.material.emissiveIntensity = 1.0 + Math.sin(time * 2) * 0.5;
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // Petunjuk di console
+        console.log('🚀 Tombol 3D siap! Klik tombol biru untuk mencoba.');
+    </script>
 </body>
 </html>
