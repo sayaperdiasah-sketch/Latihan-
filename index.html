@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>✦ Planet 3D — Interaktif dengan Zoom & Info</title>
+    <title>✦ Planet 3D — All Planets Showcase</title>
     <style>
         * {
             margin: 0;
@@ -87,7 +87,12 @@
             padding-top: 14px;
         }
 
-        /* Hint di tengah bawah */
+        /* Highlight indicator pada planet yang dipilih */
+        .planet-highlight {
+            outline: 2px solid rgba(255, 215, 0, 0.3);
+            outline-offset: 6px;
+        }
+
         #hint {
             position: absolute;
             bottom: 40px;
@@ -105,7 +110,6 @@
             opacity: 0;
         }
 
-        /* Tombol reset (kembali) di pojok kanan atas */
         #reset-btn {
             position: absolute;
             top: 24px;
@@ -205,7 +209,6 @@
         renderer.toneMappingExposure = 1.2;
         document.body.appendChild(renderer.domElement);
 
-        // Controls (kita akan override posisi kamera saat animasi)
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.dampingFactor = 0.08;
@@ -255,7 +258,7 @@
             color: 0x2a6f8f,
             emissive: 0x0a2a3a,
             size: 1.0,
-            pos: [-2.8, 0.2, 0]
+            pos: [-2.8, 1.2, 0]
         }, {
             name: 'Mars',
             sub: '🔴 Planet Merah',
@@ -264,7 +267,7 @@
             color: 0xc1440e,
             emissive: 0x3a1a0a,
             size: 0.8,
-            pos: [0, 0.4, 0]
+            pos: [0, 0.0, 0]
         }, {
             name: 'Jupiter',
             sub: '🟠 Raksasa Gas',
@@ -273,12 +276,22 @@
             color: 0xd4a373,
             emissive: 0x2a1a0a,
             size: 1.6,
-            pos: [2.8, -0.2, 0]
+            pos: [2.8, -1.2, 0]
         }];
 
-        // ----- 5. BUAT PLANET -----
+        // ----- 5. BUAT PLANET & SIMPAN POSISI -----
         const planets = [];
         const planetMeshes = [];
+
+        // Posisi awal (diambil dari data)
+        const initialPositions = planetData.map(d => new THREE.Vector3(d.pos[0], d.pos[1], d.pos[2]));
+
+        // Posisi saat zoom (semua di kanan, berderet vertikal)
+        const zoomedPositions = planetData.map((data, idx) => {
+            // Spasi vertikal 1.8, dan posisi X seragam 3.8
+            const yOffset = (idx - 1) * 1.8;
+            return new THREE.Vector3(3.8, yOffset, 0);
+        });
 
         planetData.forEach((data, index) => {
             const geometry = new THREE.SphereGeometry(data.size, 64, 64);
@@ -290,19 +303,23 @@
                 roughness: 0.6,
             });
             const mesh = new THREE.Mesh(geometry, material);
-            mesh.position.set(data.pos[0], data.pos[1], data.pos[2]);
+            mesh.position.copy(initialPositions[index]);
             mesh.castShadow = true;
             mesh.receiveShadow = true;
             mesh.userData = { planetIndex: index };
             scene.add(mesh);
             planetMeshes.push(mesh);
 
-            // Simpan data lengkap
-            planets.push({
+            // Simpan data planet
+            const planetObj = {
                 mesh: mesh,
                 data: data,
-                initialPos: new THREE.Vector3(data.pos[0], data.pos[1], data.pos[2]),
-            });
+                initialPos: initialPositions[index].clone(),
+                zoomedPos: zoomedPositions[index].clone(),
+                ring: null,
+                initialRingPos: null,
+                zoomedRingPos: null,
+            };
 
             // Cincin untuk Jupiter
             if (index === 2) {
@@ -316,36 +333,32 @@
                     opacity: 0.3
                 });
                 const ring = new THREE.Mesh(ringGeo, ringMat);
-                ring.position.copy(mesh.position);
+                ring.position.copy(initialPositions[index]);
                 ring.rotation.x = Math.PI / 2.5;
                 ring.rotation.z = 0.3;
                 scene.add(ring);
-                mesh.userData.ring = ring;
-                planets[index].ring = ring;
-                planets[index].initialRingPos = ring.position.clone();
+                planetObj.ring = ring;
+                planetObj.initialRingPos = initialPositions[index].clone();
+                planetObj.zoomedRingPos = zoomedPositions[index].clone();
             }
+
+            planets.push(planetObj);
         });
 
-        // ----- 6. STATE UNTUK ANIMASI ZOOM & GESER -----
+        // ----- 6. STATE UNTUK ANIMASI -----
         let isAnimating = false;
         let animProgress = 0;
-        let animDuration = 1.2; // detik
+        const animDuration = 1.2; // detik
 
-        // Posisi awal kamera dan target
         const initialCamPos = new THREE.Vector3(0, 2.5, 10);
         const initialTarget = new THREE.Vector3(0, 0, 0);
 
-        // Target posisi kamera dan planet saat zoom
         let targetCamPos = new THREE.Vector3();
-        let targetPlanetPos = new THREE.Vector3();
-        let targetRingPos = new THREE.Vector3(); // untuk cincin Jupiter
+        let targetLookAt = new THREE.Vector3();
         let selectedPlanetIndex = -1;
         let isZoomed = false;
 
-        // Simpan posisi awal planet
-        const initialPlanetPositions = planets.map(p => p.initialPos.clone());
-
-        // Elemen UI
+        // UI Elements
         const infoPanel = document.getElementById('info-panel');
         const planetName = document.getElementById('planet-name');
         const planetSub = document.getElementById('planet-sub');
@@ -355,63 +368,46 @@
         const resetBtn = document.getElementById('reset-btn');
         const hintEl = document.getElementById('hint');
 
-        // ----- 7. FUNGSI ZOOM IN -----
+        // ----- 7. FUNGSI ZOOM IN (Semua planet bergerak) -----
         function zoomToPlanet(index) {
             if (isAnimating || isZoomed) return;
-            const planet = planets[index];
-            if (!planet) return;
+            if (index < 0 || index >= planets.length) return;
 
             selectedPlanetIndex = index;
             isZoomed = true;
             isAnimating = true;
             animProgress = 0;
 
-            // Hitung posisi target: planet di kanan (x=3.5) dan kamera di depan kiri
-            // Kita ingin planet berada di koordinat (3.5, 0, 0)
-            const offsetX = 3.8;
-            const targetPos = new THREE.Vector3(offsetX, 0, 0);
-            targetPlanetPos.copy(targetPos);
-            if (planet.ring) {
-                targetRingPos.copy(targetPos);
-            }
+            // Target kamera: lihat ke arah kanan (ke deretan planet)
+            targetCamPos.set(-3.5, 1.5, 5.5);
+            targetLookAt.set(3.8, 0, 0);
 
-            // Posisi kamera: di kiri depan agak tinggi
-            targetCamPos.set(-4.5, 1.8, 5.5);
-
-            // Sembunyikan hint
             hintEl.classList.add('hidden');
-
-            // Tampilkan tombol reset
             resetBtn.classList.add('visible');
-
-            // Sembunyikan panel info dulu (akan muncul setelah animasi selesai)
             infoPanel.classList.remove('show');
+
+            // Highlight efek (opsional)
+            planetMeshes.forEach((mesh, i) => {
+                mesh.material.emissiveIntensity = (i === index) ? 0.6 : 0.2;
+            });
         }
 
-        // ----- 8. FUNGSI RESET (kembali ke semula) -----
+        // ----- 8. FUNGSI RESET (Kembali ke semula) -----
         function resetView() {
             if (isAnimating || !isZoomed) return;
             isAnimating = true;
             animProgress = 0;
+            isZoomed = false;
 
-            // Kembalikan posisi planet ke awal
-            const idx = selectedPlanetIndex;
-            if (idx !== -1) {
-                const p = planets[idx];
-                targetPlanetPos.copy(p.initialPos);
-                if (p.ring) {
-                    targetRingPos.copy(p.initialRingPos);
-                }
-            }
-
-            // Kembalikan kamera ke awal
             targetCamPos.copy(initialCamPos);
+            targetLookAt.copy(initialTarget);
 
-            // Sembunyikan panel info
             infoPanel.classList.remove('show');
 
-            // Sembunyikan tombol reset setelah animasi selesai (di akhir)
-            // Kita set flag isZoomed = false di akhir animasi
+            // Reset highlight
+            planetMeshes.forEach(mesh => {
+                mesh.material.emissiveIntensity = 0.2;
+            });
         }
 
         // ----- 9. RAYCASTER UNTUK KLIK -----
@@ -436,17 +432,13 @@
             }
         });
 
-        // ----- 10. EVENT UI -----
+        // ----- 10. UI EVENT -----
         closeBtn.addEventListener('click', () => {
-            if (isZoomed && !isAnimating) {
-                resetView();
-            }
+            if (isZoomed && !isAnimating) resetView();
         });
 
         resetBtn.addEventListener('click', () => {
-            if (isZoomed && !isAnimating) {
-                resetView();
-            }
+            if (isZoomed && !isAnimating) resetView();
         });
 
         // ----- 11. RESPONSIF -----
@@ -457,18 +449,22 @@
         });
 
         // ----- 12. LOOP ANIMASI UTAMA -----
-        function animate(time) {
+        function easeInOutCubic(x) {
+            return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+        }
+
+        function animate() {
             requestAnimationFrame(animate);
 
-            // Update animasi jika sedang berlangsung
+            // Proses animasi
             if (isAnimating) {
-                animProgress += 0.016 / animDuration; // asumsi 60fps
+                animProgress += 0.016 / animDuration;
                 if (animProgress >= 1) {
                     animProgress = 1;
                     isAnimating = false;
 
-                    // Jika selesai zoom in, tampilkan info
                     if (isZoomed) {
+                        // Tampilkan info planet yang dipilih
                         const idx = selectedPlanetIndex;
                         if (idx !== -1) {
                             const data = planetData[idx];
@@ -479,58 +475,49 @@
                             infoPanel.classList.add('show');
                         }
                     } else {
-                        // Selesai reset
-                        isZoomed = false;
+                        // Reset selesai
                         selectedPlanetIndex = -1;
                         resetBtn.classList.remove('visible');
                         hintEl.classList.remove('hidden');
-                        // Pastikan panel info tertutup
                         infoPanel.classList.remove('show');
                     }
                 }
 
-                // Interpolasi posisi kamera dan planet
                 const t = easeInOutCubic(animProgress);
 
-                // Kamera
-                camera.position.lerpVectors(
-                    isZoomed ? initialCamPos : targetCamPos,
-                    isZoomed ? targetCamPos : initialCamPos,
-                    t
-                );
-                // Target controls (kita set target ke posisi planet yang bergerak)
-                const currentPlanetPos = new THREE.Vector3();
-                const idx = selectedPlanetIndex !== -1 ? selectedPlanetIndex : 0;
-                // Untuk planet yang dipilih (atau planet pertama)
-                const p = planets[idx];
-                const startPos = isZoomed ? p.initialPos : targetPlanetPos;
-                const endPos = isZoomed ? targetPlanetPos : p.initialPos;
-                currentPlanetPos.lerpVectors(startPos, endPos, t);
+                // 1. Gerakkan SEMUA planet
+                planets.forEach((planet, idx) => {
+                    const startPos = isZoomed ? planet.initialPos : planet.zoomedPos;
+                    const endPos = isZoomed ? planet.zoomedPos : planet.initialPos;
+                    const currentPos = new THREE.Vector3().lerpVectors(startPos, endPos, t);
+                    planet.mesh.position.copy(currentPos);
 
-                // Gerakkan planet yang dipilih
-                if (selectedPlanetIndex !== -1) {
-                    const pIdx = selectedPlanetIndex;
-                    const planet = planets[pIdx];
-                    planet.mesh.position.copy(currentPlanetPos);
                     if (planet.ring) {
-                        const ringStart = isZoomed ? planet.initialRingPos : targetRingPos;
-                        const ringEnd = isZoomed ? targetRingPos : planet.initialRingPos;
+                        const ringStart = isZoomed ? planet.initialRingPos : planet.zoomedRingPos;
+                        const ringEnd = isZoomed ? planet.zoomedRingPos : planet.initialRingPos;
                         const ringPos = new THREE.Vector3().lerpVectors(ringStart, ringEnd, t);
                         planet.ring.position.copy(ringPos);
                     }
-                }
+                });
 
-                // Update controls target ke posisi planet yang bergerak (agar kamera fokus)
-                controls.target.copy(currentPlanetPos);
+                // 2. Gerakkan kamera
+                const camStart = isZoomed ? initialCamPos : targetCamPos;
+                const camEnd = isZoomed ? targetCamPos : initialCamPos;
+                camera.position.lerpVectors(camStart, camEnd, t);
+
+                const targetStart = isZoomed ? initialTarget : targetLookAt;
+                const targetEnd = isZoomed ? targetLookAt : initialTarget;
+                controls.target.lerpVectors(targetStart, targetEnd, t);
+
                 controls.update();
 
             } else {
-                // Saat idle, update controls biasa
+                // Idle: auto-rotate berjalan
                 controls.update();
             }
 
-            // Rotasi planet
-            planets.forEach((p, idx) => {
+            // Rotasi planet (selalu berputar)
+            planets.forEach((p) => {
                 p.mesh.rotation.y += 0.004;
                 if (p.ring) {
                     p.ring.rotation.y += 0.001;
@@ -538,23 +525,15 @@
             });
 
             stars.rotation.y += 0.0001;
-
             renderer.render(scene, camera);
         }
 
-        // Easing function
-        function easeInOutCubic(x) {
-            return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
-        }
+        // Inisialisasi target
+        targetCamPos.copy(initialCamPos);
+        targetLookAt.copy(initialTarget);
 
         animate();
-
-        // Inisialisasi posisi target awal
-        targetCamPos.copy(initialCamPos);
-        targetPlanetPos.set(3.8, 0, 0);
-        targetRingPos.set(3.8, 0, 0);
-
-        console.log('🚀 Planet 3D siap! Klik planet untuk zoom & info.');
+        console.log('🚀 Semua planet siap! Klik salah satu untuk zoom & info.');
     </script>
 </body>
 </html>
