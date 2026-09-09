@@ -3,183 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>✦ Planet 3D — All Planets Showcase</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: #0b0e1a;
-            overflow: hidden;
-            color: #fff;
-        }
-
-        /* Panel info di sisi kiri */
-        #info-panel {
-            position: absolute;
-            top: 50%;
-            left: 40px;
-            transform: translateY(-50%);
-            width: 320px;
-            max-width: 70vw;
-            background: rgba(10, 14, 30, 0.85);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 28px;
-            padding: 32px 28px;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s ease, transform 0.4s ease;
-            transform: translateY(-50%) translateX(-20px);
-            z-index: 20;
-        }
-        #info-panel.show {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translateY(-50%) translateX(0);
-        }
-        #info-panel .close-btn {
-            position: absolute;
-            top: 16px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.06);
-            border: none;
-            color: #fff;
-            font-size: 1.4rem;
-            cursor: pointer;
-            padding: 4px 12px;
-            border-radius: 40px;
-            transition: background 0.2s;
-            line-height: 1;
-        }
-        #info-panel .close-btn:hover {
-            background: rgba(255, 255, 255, 0.12);
-        }
-        #info-panel h2 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin-bottom: 6px;
-            background: linear-gradient(135deg, #f0c27f, #fc5c7d);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        #info-panel .sub {
-            font-size: 1rem;
-            color: #aab;
-            margin-bottom: 14px;
-            letter-spacing: 1px;
-        }
-        #info-panel p {
-            font-size: 1rem;
-            line-height: 1.7;
-            color: #ccd;
-            font-weight: 300;
-        }
-        #info-panel .detail {
-            margin-top: 16px;
-            font-size: 0.85rem;
-            color: #8899bb;
-            border-top: 1px solid rgba(255,255,255,0.06);
-            padding-top: 14px;
-        }
-
-        /* Highlight indicator pada planet yang dipilih */
-        .planet-highlight {
-            outline: 2px solid rgba(255, 215, 0, 0.3);
-            outline-offset: 6px;
-        }
-
-        #hint {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(255, 255, 255, 0.2);
-            font-size: 0.85rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            pointer-events: none;
-            z-index: 5;
-            transition: opacity 0.6s;
-        }
-        #hint.hidden {
-            opacity: 0;
-        }
-
-        #reset-btn {
-            position: absolute;
-            top: 24px;
-            right: 24px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            color: #fff;
-            padding: 8px 20px;
-            border-radius: 40px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            backdrop-filter: blur(8px);
-            z-index: 10;
-            transition: background 0.2s;
-            display: none;
-        }
-        #reset-btn:hover {
-            background: rgba(255, 255, 255, 0.12);
-        }
-        #reset-btn.visible {
-            display: block;
-        }
-
-        @media (max-width: 640px) {
-            #info-panel {
-                left: 20px;
-                right: 20px;
-                width: auto;
-                top: auto;
-                bottom: 30px;
-                transform: none;
-                border-radius: 20px;
-                padding: 24px 20px;
-                max-height: 60vh;
-                overflow-y: auto;
-            }
-            #info-panel.show {
-                transform: none;
-            }
-            #info-panel h2 {
-                font-size: 1.6rem;
-            }
-            #hint {
-                bottom: 100px;
-                font-size: 0.7rem;
-            }
-            #reset-btn {
-                top: 16px;
-                right: 16px;
-                padding: 6px 14px;
-                font-size: 0.7rem;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <!-- Panel info kiri -->
-    <div id="info-panel">
-        <button class="close-btn" id="close-info">✕</button>
-        <h2 id="planet-name">Bumi</h2>
-        <div class="sub" id="planet-sub">🌍 Planet Biru</div>
-        <p id="planet-desc">Bumi adalah planet ketiga dari Matahari dan satu-satunya planet yang diketahui memiliki kehidupan.</p>
-        <div class="detail" id="planet-detail">Diameter: 12.742 km • Jarak: 1 AU</div>
-    </div>
-
-    <div id="hint">🪐 Klik planet untuk melihat info</div>
-    <button id="reset-btn">↺ Kembali</button>
-
-    <!-- Impor Three.js -->
+    <title>Open Source 3D Assets — Galeri Model</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300&display=swap" rel="stylesheet" />
     <script type="importmap">
         {
             "imports": {
@@ -188,352 +13,683 @@
             }
         }
     </script>
-
-    <script type="module">
-        // ----- 1. IMPOR -----
-        import * as THREE from 'three';
-        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-
-        // ----- 2. SETUP SCENE, CAMERA, RENDERER -----
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x0b0e1a);
-
-        const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 100);
-        camera.position.set(0, 2.5, 10);
-
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.shadowMap.enabled = true;
-        renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.2;
-        document.body.appendChild(renderer.domElement);
-
-        const controls = new OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.dampingFactor = 0.08;
-        controls.autoRotate = true;
-        controls.autoRotateSpeed = 0.6;
-        controls.minDistance = 3;
-        controls.maxDistance = 20;
-        controls.target.set(0, 0, 0);
-
-        // ----- 3. LIGHTING -----
-        const ambient = new THREE.AmbientLight(0x404060);
-        scene.add(ambient);
-
-        const mainLight = new THREE.DirectionalLight(0xffffff, 2.5);
-        mainLight.position.set(5, 8, 6);
-        mainLight.castShadow = true;
-        scene.add(mainLight);
-
-        const fillLight = new THREE.DirectionalLight(0x7b6eff, 1.0);
-        fillLight.position.set(-4, 2, -3);
-        scene.add(fillLight);
-
-        const rimLight = new THREE.DirectionalLight(0xff7eb3, 0.6);
-        rimLight.position.set(-2, -1, -5);
-        scene.add(rimLight);
-
-        // Bintang latar
-        const starsGeo = new THREE.BufferGeometry();
-        const starsCount = 3000;
-        const starPos = new Float32Array(starsCount * 3);
-        for (let i = 0; i < starsCount * 3; i += 3) {
-            starPos[i] = (Math.random() - 0.5) * 200;
-            starPos[i+1] = (Math.random() - 0.5) * 200;
-            starPos[i+2] = (Math.random() - 0.5) * 200 - 50;
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        starsGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
-        const starsMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.12, transparent: true, opacity: 0.6 });
-        const stars = new THREE.Points(starsGeo, starsMat);
-        scene.add(stars);
 
-        // ----- 4. DATA PLANET -----
-        const planetData = [{
-            name: 'Bumi',
-            sub: '🌍 Planet Biru',
-            desc: 'Bumi adalah planet ketiga dari Matahari dan satu-satunya planet yang diketahui memiliki kehidupan. Memiliki atmosfer kaya oksigen dan air cair.',
-            detail: 'Diameter: 12.742 km • Jarak: 1 AU',
-            color: 0x2a6f8f,
-            emissive: 0x0a2a3a,
-            size: 1.0,
-            pos: [-2.8, 1.2, 0]
-        }, {
-            name: 'Mars',
-            sub: '🔴 Planet Merah',
-            desc: 'Mars adalah planet keempat dari Matahari. Dikenal sebagai "planet merah" karena oksida besi di permukaannya. Memiliki gunung tertinggi, Olympus Mons.',
-            detail: 'Diameter: 6.779 km • Jarak: 1.5 AU',
-            color: 0xc1440e,
-            emissive: 0x3a1a0a,
-            size: 0.8,
-            pos: [0, 0.0, 0]
-        }, {
-            name: 'Jupiter',
-            sub: '🟠 Raksasa Gas',
-            desc: 'Jupiter adalah planet terbesar di tata surya. Terkenal dengan Bintik Merah Besar, badai raksasa yang telah berlangsung selama ratusan tahun.',
-            detail: 'Diameter: 139.820 km • Jarak: 5.2 AU',
-            color: 0xd4a373,
-            emissive: 0x2a1a0a,
-            size: 1.6,
-            pos: [2.8, -1.2, 0]
-        }];
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0c14;
+            color: #f0f0f5;
+            min-height: 100vh;
+            padding: 24px 20px 60px;
+        }
 
-        // ----- 5. BUAT PLANET & SIMPAN POSISI -----
-        const planets = [];
-        const planetMeshes = [];
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
 
-        // Posisi awal (diambil dari data)
-        const initialPositions = planetData.map(d => new THREE.Vector3(d.pos[0], d.pos[1], d.pos[2]));
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 32px;
+        }
 
-        // Posisi saat zoom (semua di kanan, berderet vertikal)
-        const zoomedPositions = planetData.map((data, idx) => {
-            // Spasi vertikal 1.8, dan posisi X seragam 3.8
-            const yOffset = (idx - 1) * 1.8;
-            return new THREE.Vector3(3.8, yOffset, 0);
-        });
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #a78bfa, #6ee7b7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-        planetData.forEach((data, index) => {
-            const geometry = new THREE.SphereGeometry(data.size, 64, 64);
-            const material = new THREE.MeshStandardMaterial({
-                color: data.color,
-                emissive: data.emissive,
-                emissiveIntensity: 0.2,
-                metalness: 0.1,
-                roughness: 0.6,
-            });
-            const mesh = new THREE.Mesh(geometry, material);
-            mesh.position.copy(initialPositions[index]);
-            mesh.castShadow = true;
-            mesh.receiveShadow = true;
-            mesh.userData = { planetIndex: index };
-            scene.add(mesh);
-            planetMeshes.push(mesh);
+        header .badge {
+            font-size: 0.75rem;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 6px 16px;
+            border-radius: 100px;
+            color: #aab;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
 
-            // Simpan data planet
-            const planetObj = {
-                mesh: mesh,
-                data: data,
-                initialPos: initialPositions[index].clone(),
-                zoomedPos: zoomedPositions[index].clone(),
-                ring: null,
-                initialRingPos: null,
-                zoomedRingPos: null,
-            };
+        /* Status & Filter */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
 
-            // Cincin untuk Jupiter
-            if (index === 2) {
-                const ringGeo = new THREE.TorusGeometry(data.size * 1.4, 0.06, 16, 64);
-                const ringMat = new THREE.MeshStandardMaterial({
-                    color: 0x8a6e4b,
-                    emissive: 0x2a1a0a,
-                    emissiveIntensity: 0.1,
-                    side: THREE.DoubleSide,
-                    transparent: true,
-                    opacity: 0.3
-                });
-                const ring = new THREE.Mesh(ringGeo, ringMat);
-                ring.position.copy(initialPositions[index]);
-                ring.rotation.x = Math.PI / 2.5;
-                ring.rotation.z = 0.3;
-                scene.add(ring);
-                planetObj.ring = ring;
-                planetObj.initialRingPos = initialPositions[index].clone();
-                planetObj.zoomedRingPos = zoomedPositions[index].clone();
+        .status {
+            font-size: 0.9rem;
+            color: #8899bb;
+        }
+
+        .status .count {
+            color: #f0f0f5;
+            font-weight: 600;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: #8899bb;
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .filter-btn.active {
+            background: rgba(167, 139, 250, 0.15);
+            border-color: rgba(167, 139, 250, 0.3);
+            color: #c4b5fd;
+        }
+
+        /* Grid Galeri */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        /* Kartu Model */
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(167, 139, 250, 0.2);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .card .thumbnail {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background: #111422;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .card:hover .thumbnail img {
+            transform: scale(1.05);
+        }
+
+        .card .thumbnail .fallback {
+            color: #445;
+            font-size: 0.7rem;
+            text-align: center;
+            padding: 12px;
+        }
+
+        .card .info {
+            padding: 14px 16px 16px;
+        }
+
+        .card .info .name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card .info .collection {
+            font-size: 0.7rem;
+            color: #667799;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .card .info .size {
+            font-size: 0.65rem;
+            color: #445566;
+            margin-top: 4px;
+        }
+
+        .card .view-btn {
+            position: absolute;
+            bottom: 60px;
+            right: 12px;
+            background: rgba(167, 139, 250, 0.2);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(167, 139, 250, 0.2);
+            color: #c4b5fd;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 0.65rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .card:hover .view-btn {
+            opacity: 1;
+        }
+
+        /* Modal Viewer */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal {
+            background: #141824;
+            border-radius: 24px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .modal .modal-header h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .modal .modal-header .close {
+            background: none;
+            border: none;
+            color: #8899bb;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0 8px;
+            transition: color 0.2s;
+        }
+
+        .modal .modal-header .close:hover {
+            color: #f0f0f5;
+        }
+
+        .modal .viewer-wrap {
+            flex: 1;
+            min-height: 400px;
+            background: #0a0c14;
+            position: relative;
+        }
+
+        .modal .viewer-wrap model-viewer {
+            width: 100%;
+            height: 100%;
+            min-height: 400px;
+            display: block;
+        }
+
+        .modal .modal-footer {
+            padding: 12px 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: #8899bb;
+        }
+
+        .modal .modal-footer a {
+            color: #a78bfa;
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(167, 139, 250, 0.3);
+        }
+
+        .modal .modal-footer a:hover {
+            color: #c4b5fd;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #667799;
+        }
+
+        .loading .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.05);
+            border-top-color: #a78bfa;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
             }
-
-            planets.push(planetObj);
-        });
-
-        // ----- 6. STATE UNTUK ANIMASI -----
-        let isAnimating = false;
-        let animProgress = 0;
-        const animDuration = 1.2; // detik
-
-        const initialCamPos = new THREE.Vector3(0, 2.5, 10);
-        const initialTarget = new THREE.Vector3(0, 0, 0);
-
-        let targetCamPos = new THREE.Vector3();
-        let targetLookAt = new THREE.Vector3();
-        let selectedPlanetIndex = -1;
-        let isZoomed = false;
-
-        // UI Elements
-        const infoPanel = document.getElementById('info-panel');
-        const planetName = document.getElementById('planet-name');
-        const planetSub = document.getElementById('planet-sub');
-        const planetDesc = document.getElementById('planet-desc');
-        const planetDetail = document.getElementById('planet-detail');
-        const closeBtn = document.getElementById('close-info');
-        const resetBtn = document.getElementById('reset-btn');
-        const hintEl = document.getElementById('hint');
-
-        // ----- 7. FUNGSI ZOOM IN (Semua planet bergerak) -----
-        function zoomToPlanet(index) {
-            if (isAnimating || isZoomed) return;
-            if (index < 0 || index >= planets.length) return;
-
-            selectedPlanetIndex = index;
-            isZoomed = true;
-            isAnimating = true;
-            animProgress = 0;
-
-            // Target kamera: lihat ke arah kanan (ke deretan planet)
-            targetCamPos.set(-3.5, 1.5, 5.5);
-            targetLookAt.set(3.8, 0, 0);
-
-            hintEl.classList.add('hidden');
-            resetBtn.classList.add('visible');
-            infoPanel.classList.remove('show');
-
-            // Highlight efek (opsional)
-            planetMeshes.forEach((mesh, i) => {
-                mesh.material.emissiveIntensity = (i === index) ? 0.6 : 0.2;
-            });
         }
 
-        // ----- 8. FUNGSI RESET (Kembali ke semula) -----
-        function resetView() {
-            if (isAnimating || !isZoomed) return;
-            isAnimating = true;
-            animProgress = 0;
-            isZoomed = false;
-
-            targetCamPos.copy(initialCamPos);
-            targetLookAt.copy(initialTarget);
-
-            infoPanel.classList.remove('show');
-
-            // Reset highlight
-            planetMeshes.forEach(mesh => {
-                mesh.material.emissiveIntensity = 0.2;
-            });
-        }
-
-        // ----- 9. RAYCASTER UNTUK KLIK -----
-        const raycaster = new THREE.Raycaster();
-        const pointer = new THREE.Vector2();
-
-        renderer.domElement.addEventListener('click', (event) => {
-            if (isAnimating) return;
-            const rect = renderer.domElement.getBoundingClientRect();
-            pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-            pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-
-            raycaster.setFromCamera(pointer, camera);
-            const intersects = raycaster.intersectObjects(planetMeshes);
-
-            if (intersects.length > 0) {
-                const hit = intersects[0].object;
-                const idx = hit.userData.planetIndex;
-                if (idx !== undefined && !isZoomed) {
-                    zoomToPlanet(idx);
-                }
+        /* Responsif */
+        @media (max-width: 640px) {
+            body {
+                padding: 16px 12px 40px;
             }
-        });
-
-        // ----- 10. UI EVENT -----
-        closeBtn.addEventListener('click', () => {
-            if (isZoomed && !isAnimating) resetView();
-        });
-
-        resetBtn.addEventListener('click', () => {
-            if (isZoomed && !isAnimating) resetView();
-        });
-
-        // ----- 11. RESPONSIF -----
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        // ----- 12. LOOP ANIMASI UTAMA -----
-        function easeInOutCubic(x) {
-            return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-
-            // Proses animasi
-            if (isAnimating) {
-                animProgress += 0.016 / animDuration;
-                if (animProgress >= 1) {
-                    animProgress = 1;
-                    isAnimating = false;
-
-                    if (isZoomed) {
-                        // Tampilkan info planet yang dipilih
-                        const idx = selectedPlanetIndex;
-                        if (idx !== -1) {
-                            const data = planetData[idx];
-                            planetName.textContent = data.name;
-                            planetSub.textContent = data.sub;
-                            planetDesc.textContent = data.desc;
-                            planetDetail.textContent = data.detail;
-                            infoPanel.classList.add('show');
-                        }
-                    } else {
-                        // Reset selesai
-                        selectedPlanetIndex = -1;
-                        resetBtn.classList.remove('visible');
-                        hintEl.classList.remove('hidden');
-                        infoPanel.classList.remove('show');
-                    }
-                }
-
-                const t = easeInOutCubic(animProgress);
-
-                // 1. Gerakkan SEMUA planet
-                planets.forEach((planet, idx) => {
-                    const startPos = isZoomed ? planet.initialPos : planet.zoomedPos;
-                    const endPos = isZoomed ? planet.zoomedPos : planet.initialPos;
-                    const currentPos = new THREE.Vector3().lerpVectors(startPos, endPos, t);
-                    planet.mesh.position.copy(currentPos);
-
-                    if (planet.ring) {
-                        const ringStart = isZoomed ? planet.initialRingPos : planet.zoomedRingPos;
-                        const ringEnd = isZoomed ? planet.zoomedRingPos : planet.initialRingPos;
-                        const ringPos = new THREE.Vector3().lerpVectors(ringStart, ringEnd, t);
-                        planet.ring.position.copy(ringPos);
-                    }
-                });
-
-                // 2. Gerakkan kamera
-                const camStart = isZoomed ? initialCamPos : targetCamPos;
-                const camEnd = isZoomed ? targetCamPos : initialCamPos;
-                camera.position.lerpVectors(camStart, camEnd, t);
-
-                const targetStart = isZoomed ? initialTarget : targetLookAt;
-                const targetEnd = isZoomed ? targetLookAt : initialTarget;
-                controls.target.lerpVectors(targetStart, targetEnd, t);
-
-                controls.update();
-
-            } else {
-                // Idle: auto-rotate berjalan
-                controls.update();
+            header h1 {
+                font-size: 1.3rem;
             }
-
-            // Rotasi planet (selalu berputar)
-            planets.forEach((p) => {
-                p.mesh.rotation.y += 0.004;
-                if (p.ring) {
-                    p.ring.rotation.y += 0.001;
-                }
-            });
-
-            stars.rotation.y += 0.0001;
-            renderer.render(scene, camera);
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 12px;
+            }
+            .card .info {
+                padding: 10px 12px 12px;
+            }
+            .card .info .name {
+                font-size: 0.75rem;
+            }
+            .modal {
+                max-height: 95vh;
+            }
+            .modal .viewer-wrap {
+                min-height: 300px;
+            }
+            .modal .viewer-wrap model-viewer {
+                min-height: 300px;
+            }
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filter-group {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                padding-bottom: 4px;
+            }
+            .filter-btn {
+                white-space: nowrap;
+            }
         }
+    </style>
+</head>
+<body>
 
-        // Inisialisasi target
-        targetCamPos.copy(initialCamPos);
-        targetLookAt.copy(initialTarget);
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>✦ Open Source 3D Assets</h1>
+            <span class="badge">CC0 · 900+ model</span>
+        </header>
 
-        animate();
-        console.log('🚀 Semua planet siap! Klik salah satu untuk zoom & info.');
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <div class="status">
+                Menampilkan <span class="count" id="modelCount">0</span> model
+            </div>
+            <div class="filter-group" id="filterGroup">
+                <button class="filter-btn active" data-filter="all">Semua</button>
+                <!-- Filter akan diisi otomatis dari koleksi -->
+            </div>
+        </div>
+
+        <!-- Grid -->
+        <div class="grid" id="modelGrid">
+            <div class="loading">
+                <div class="spinner"></div>
+                <div>Memuat model 3D ...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Viewer -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">Model 3D</h3>
+                <button class="close" id="modalClose">✕</button>
+            </div>
+            <div class="viewer-wrap" id="modalViewerWrap">
+                <model-viewer
+                    id="modalViewer"
+                    src=""
+                    alt="Model 3D"
+                    camera-controls
+                    touch-action="pan-y"
+                    auto-rotate
+                    rotation-per-second="30deg"
+                    shadow-intensity="0.4"
+                    exposure="1.0"
+                    environment-image="neutral"
+                    style="width: 100%; height: 100%; min-height: 400px; background: #0a0c14;"
+                >
+                </model-viewer>
+            </div>
+            <div class="modal-footer">
+                <span id="modalInfo">Klik &amp; geser untuk memutar</span>
+                <a id="modalLink" href="#" target="_blank">🔗 Buka Raw URL</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load model-viewer -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js">
     </script>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ----- Konfigurasi -----
+            const BASE_URL =
+                'https://raw.githubusercontent.com/ToxSam/open-source-3d-assets/main/data/';
+            const PROJECTS_URL = BASE_URL + 'projects.json';
+
+            // ----- State -----
+            let allModels = [];
+            let filteredModels = [];
+            let currentFilter = 'all';
+            let collections = [];
+
+            // ----- DOM -----
+            const grid = document.getElementById('modelGrid');
+            const modelCount = document.getElementById('modelCount');
+            const filterGroup = document.getElementById('filterGroup');
+
+            // Modal
+            const overlay = document.getElementById('modalOverlay');
+            const viewer = document.getElementById('modalViewer');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalInfo = document.getElementById('modalInfo');
+            const modalLink = document.getElementById('modalLink');
+            const closeBtn = document.getElementById('modalClose');
+
+            // ----- Utility -----
+            function formatSize(bytes) {
+                if (!bytes) return '';
+                if (bytes < 1024) return bytes + ' B';
+                if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+                return (bytes / 1048576).toFixed(1) + ' MB';
+            }
+
+            function slugify(text) {
+                return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+            }
+
+            // ----- Ambil data dari GitHub -----
+            async function fetchData() {
+                try {
+                    // 1. Ambil projects.json
+                    const projRes = await fetch(PROJECTS_URL);
+                    if (!projRes.ok) throw new Error('Gagal mengambil projects.json');
+                    const projects = await projRes.json();
+
+                    // 2. Kumpulkan semua asset_data_file
+                    const assetFiles = projects
+                        .filter(p => p.is_public !== false)
+                        .map(p => p.asset_data_file);
+
+                    collections = projects.filter(p => p.is_public !== false);
+
+                    // 3. Ambil setiap asset file
+                    const allAssets = [];
+                    for (const file of assetFiles) {
+                        try {
+                            const url = BASE_URL + file;
+                            const res = await fetch(url);
+                            if (!res.ok) continue;
+                            const data = await res.json();
+                            // Cari tahu nama koleksi dari projects
+                            const project = projects.find(p => p.asset_data_file === file);
+                            const collectionName = project ? project.name : file.replace('assets/pm-', '').replace(
+                            '.json', '');
+                            // Tambahkan data koleksi ke setiap asset
+                            data.forEach(asset => {
+                                asset.collection = collectionName;
+                                asset.project_id = project ? project.id : null;
+                            });
+                            allAssets.push(...data);
+                        } catch (e) {
+                            console.warn('Gagal memuat:', file, e);
+                        }
+                    }
+
+                    return allAssets;
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    throw error;
+                }
+            }
+
+            // ----- Render Filter -----
+            function renderFilters() {
+                // Ambil semua nama koleksi unik
+                const names = new Set();
+                collections.forEach(c => {
+                    if (c.is_public !== false) names.add(c.name);
+                });
+
+                // Hapus semua kecuali "Semua"
+                const allBtn = filterGroup.querySelector('[data-filter="all"]');
+                filterGroup.innerHTML = '';
+                filterGroup.appendChild(allBtn);
+
+                // Tambahkan filter untuk setiap koleksi
+                const sorted = Array.from(names).sort();
+                sorted.forEach(name => {
+                    const btn = document.createElement('button');
+                    btn.className = 'filter-btn';
+                    btn.dataset.filter = name;
+                    btn.textContent = name;
+                    btn.addEventListener('click', () => {
+                        setFilter(name);
+                    });
+                    filterGroup.appendChild(btn);
+                });
+
+                // Set active
+                updateFilterButtons();
+            }
+
+            function updateFilterButtons() {
+                const btns = filterGroup.querySelectorAll('.filter-btn');
+                btns.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.filter === currentFilter);
+                });
+            }
+
+            function setFilter(filter) {
+                currentFilter = filter;
+                updateFilterButtons();
+                applyFilter();
+            }
+
+            // ----- Filter & Render -----
+            function applyFilter() {
+                if (currentFilter === 'all') {
+                    filteredModels = allModels;
+                } else {
+                    filteredModels = allModels.filter(m => m.collection === currentFilter);
+                }
+                renderGrid();
+            }
+
+            // ----- Render Grid -----
+            function renderGrid() {
+                if (filteredModels.length === 0) {
+                    grid.innerHTML = `
+                        <div style="grid-column:1/-1; text-align:center; padding:60px 20px; color:#667799;">
+                            <div style="font-size:2rem; margin-bottom:12px;">🔍</div>
+                            <p>Tidak ada model ditemukan untuk koleksi ini.</p>
+                        </div>
+                    `;
+                    modelCount.textContent = '0';
+                    return;
+                }
+
+                modelCount.textContent = filteredModels.length;
+
+                let html = '';
+                filteredModels.forEach((model, index) => {
+                    const name = model.name || 'Model ' + (index + 1);
+                    const collection = model.collection || 'Umum';
+                    const size = formatSize(model.metadata?.file_size);
+                    const thumb = model.thumbnail_url || '';
+                    const modelUrl = model.model_file_url || '';
+
+                    html += `
+                        <div class="card" data-url="${modelUrl}" data-name="${name}" data-collection="${collection}" data-size="${size}">
+                            <div class="thumbnail">
+                                ${thumb ? `<img src="${thumb}" alt="${name}" loading="lazy" onerror="this.style.display='none'" />` : ''}
+                                <div class="fallback" style="${thumb ? 'display:none;' : ''}">
+                                    <div style="font-size:2rem; margin-bottom:4px;">🧊</div>
+                                    <div>${name}</div>
+                                </div>
+                                <span class="view-btn">Lihat 3D</span>
+                            </div>
+                            <div class="info">
+                                <div class="name" title="${name}">${name}</div>
+                                <div class="collection">${collection}</div>
+                                ${size ? `<div class="size">${size}</div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                grid.innerHTML = html;
+
+                // Event klik pada card
+                document.querySelectorAll('.card').forEach(card => {
+                    card.addEventListener('click', function() {
+                        const url = this.dataset.url;
+                        const name = this.dataset.name;
+                        const collection = this.dataset.collection;
+                        if (url) {
+                            openModal(url, name, collection);
+                        }
+                    });
+                });
+            }
+
+            // ----- Modal -----
+            function openModal(url, name, collection) {
+                viewer.src = url;
+                modalTitle.textContent = name || 'Model 3D';
+                modalInfo.textContent = collection ? `Koleksi: ${collection} · Klik & geser untuk memutar` :
+                    'Klik & geser untuk memutar';
+                modalLink.href = url;
+                overlay.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeModal() {
+                overlay.classList.remove('open');
+                document.body.style.overflow = '';
+                // Reset viewer agar tidak loading terus
+                setTimeout(() => {
+                    viewer.src = '';
+                }, 300);
+            }
+
+            // Event modal
+            closeBtn.addEventListener('click', closeModal);
+            overlay.addEventListener('click', function(e) {
+                if (e.target === this) closeModal();
+            });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeModal();
+            });
+
+            // ----- Init -----
+            async function init() {
+                try {
+                    const data = await fetchData();
+                    allModels = data;
+                    filteredModels = data;
+                    renderFilters();
+                    renderGrid();
+
+                    // Set filter default
+                    setFilter('all');
+
+                } catch (error) {
+                    grid.innerHTML = `
+                        <div style="grid-column:1/-1; text-align:center; padding:60px 20px; color:#667799;">
+                            <div style="font-size:3rem; margin-bottom:16px;">⚠️</div>
+                            <p style="font-size:1.1rem; margin-bottom:8px;">Gagal memuat data</p>
+                            <p style="font-size:0.9rem;">${error.message}</p>
+                            <button onclick="location.reload()" style="margin-top:20px; background:rgba(167,139,250,0.15); border:1px solid rgba(167,139,250,0.2); color:#c4b5fd; padding:8px 24px; border-radius:100px; cursor:pointer; font-family:inherit;">Muat Ulang</button>
+                        </div>
+                    `;
+                }
+            }
+
+            // Jalankan
+            init();
+
+        })();
+    </script>
+
 </body>
 </html>
