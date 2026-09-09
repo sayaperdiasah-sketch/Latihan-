@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>3D Viewer — .gltf / .glb</title>
+    <title>3D Viewer — scene.gltf</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet" />
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
     <style>
@@ -145,14 +145,14 @@
 <body>
 <div class="container">
     <header>
-        <div class="logo">3D Viewer <span>• .gltf / .glb</span></div>
+        <div class="logo">3D Viewer <span>• scene.gltf</span></div>
         <div class="badge">✦ interaktif</div>
     </header>
     <div class="viewer-wrapper">
-        <!-- Ganti src dengan file .gltf atau .glb Anda -->
+        <!-- LANGSUNG PAKAI scene.gltf -->
         <model-viewer
             id="model-viewer"
-            src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
+            src="scene.gltf"
             alt="Model 3D"
             camera-controls
             touch-action="pan-y"
@@ -168,8 +168,8 @@
     </div>
     <div class="info-panel">
         <div class="instruction">
-            <span>📁 Ganti model dengan file .gltf atau .glb Anda:</span>
-            <code>src="path/ke/file.gltf"</code>
+            <span>📁 File yang digunakan:</span>
+            <code>scene.gltf</code> dan <code>scene.bin</code> (otomatis)
         </div>
         <div class="controls">
             <button class="btn" id="btnReset">↺ Reset kamera</button>
@@ -177,8 +177,7 @@
         </div>
     </div>
     <footer>
-        Gunakan file 3D Anda sendiri — ganti atribut <strong>src</strong> pada elemen <code>&lt;model-viewer&gt;</code>.<br />
-        Contoh: <code>src="modelku.gltf"</code> (pastikan file dan tekstur berada di folder yang sama).
+        Pastikan <strong>scene.gltf</strong> dan <strong>scene.bin</strong> berada di folder yang sama dengan index.html.
     </footer>
 </div>
 <script>
@@ -198,7 +197,7 @@
             toggleBtn.textContent = rotating ? '⏸️ Hentikan putar' : '▶️ Putar otomatis';
         });
         viewer.addEventListener('load', () => {
-            console.log('✅ Model 3D berhasil dimuat!');
+            console.log('✅ Model scene.gltf berhasil dimuat!');
         });
     })();
 </script>
