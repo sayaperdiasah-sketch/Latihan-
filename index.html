@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Viewer — Masukkan file .gltf</title>
+    <!-- Font & Style minimalis -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet" />
+    <!-- model-viewer dari CDN -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+    <style>
+        /* Reset & base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5f7fa;
+            color: #1e1e2a;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            line-height: 1.5;
+            padding: 20px;
+        }
+
+        /* Container utama */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header sederhana */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0 24px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #3b3bff, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo span {
+            font-weight: 300;
+            -webkit-text-fill-color: #6b7280;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            background: #eef2ff;
+            color: #4f46e5;
+            padding: 4px 14px;
+            border-radius: 100px;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        /* Konten utama: viewer 3D */
+        .viewer-wrapper {
+            flex: 1;
+            margin: 28px 0 20px;
+            border-radius: 24px;
+            overflow: hidden;
+            background: #ffffff;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            position: relative;
+            min-height: 480px;
+        }
+
+        model-viewer {
+            width: 100%;
+            height: 600px;
+            display: block;
+            background-color: #f0f2f5;
+            /* latar belakang default */
+        }
+
+        /* Informasi dan kontrol */
+        .info-panel {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 0 8px;
+            font-size: 0.9rem;
+            color: #4b5563;
+        }
+
+        .info-panel .instruction {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f9fafb;
+            padding: 6px 16px 6px 12px;
+            border-radius: 100px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .info-panel .instruction code {
+            background: #e5e7eb;
+            padding: 2px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: #1f2937;
+        }
+
+        .info-panel .controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #1f2937;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .btn:hover {
+            background: #f3f4f6;
+            border-color: #9ca3af;
+        }
+        .btn-primary {
+            background: #4f46e5;
+            border-color: #4f46e5;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #4338ca;
+            border-color: #4338ca;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            text-align: center;
+            font-size: 0.8rem;
+            color: #9ca3af;
+            letter-spacing: 0.02em;
+        }
+
+        footer a {
+            color: #6b7280;
+            text-decoration: none;
+            border-bottom: 1px dotted #d1d5db;
+        }
+        footer a:hover {
+            color: #4f46e5;
+        }
+
+        /* Responsif */
+        @media (max-width: 640px) {
+            body {
+                padding: 12px;
+            }
+            model-viewer {
+                height: 400px;
+            }
+            .info-panel {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .info-panel .controls {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- Header -->
+        <header>
+            <div class="logo">3D Viewer <span>• .gltf / .glb</span></div>
+            <div class="badge">✦ interaktif</div>
+        </header>
+
+        <!-- Wrapper Viewer -->
+        <div class="viewer-wrapper">
+            <model-viewer
+            id="model-viewer"
+            src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
+            alt="Model 3D"
+            camera-controls
+            touch-action="pan-y"
+            auto-rotate
+            rotation-per-second="30deg"
+            interaction-prompt="auto"
+            shadow-intensity="0.6"
+            exposure="1.0"
+            environment-image="neutral"
+            style="background-color: #f0f2f5;"
+            >
+        </model-viewer>
+    </div>
+
+    <!-- Panel informasi & kontrol -->
+    <div class="info-panel">
+        <div class="instruction">
+            <span>📁 Ganti model dengan file .gltf atau .glb Anda:</span>
+            <code>src="path/ke/file.gltf"</code>
+        </div>
+        <div class="controls">
+            <button class="btn" id="btnReset">↺ Reset kamera</button>
+            <button class="btn btn-primary" id="btnToggleRotate">⏸️ Hentikan putar</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        Gunakan file 3D Anda sendiri — ganti atribut <strong>src</strong> pada elemen <code>&lt;model-viewer&gt;</code>.
+        <br />
+        Contoh: <code>src="modelku.gltf"</code> (pastikan file dan tekstur berada di folder yang sama).
+    </footer>
+
+</div>
+
+<!-- Script kecil untuk kontrol -->
+<script>
+    (function() {
+        const viewer = document.getElementById('model-viewer');
+        if (!viewer) return;
+
+        // Tombol reset kamera
+        document.getElementById('btnReset')?.addEventListener('click', () => {
+            viewer.cameraTarget = '0 0 0';
+            viewer.cameraOrbit = '0 0 2.5';
+            viewer.updateFraming();
+        });
+
+        // Tombol toggle auto-rotate
+        const toggleBtn = document.getElementById('btnToggleRotate');
+        let rotating = true;
+        toggleBtn?.addEventListener('click', () => {
+            rotating = !rotating;
+            viewer.autoRotate = rotating;
+            toggleBtn.textContent = rotating ? '⏸️ Hentikan putar' : '▶️ Putar otomatis';
+        });
+
+        // Optional: saat model dimuat, tampilkan pesan di konsol
+        viewer.addEventListener('load', () => {
+            console.log('✅ Model 3D berhasil dimuat!');
+        });
+    })();
+</script>
+
+<!-- Catatan untuk pengguna:
+1. Ganti atribut src pada <model-viewer> dengan path file .gltf atau .glb Anda.
+2. Jika model .gltf memiliki tekstur terpisah, pastikan semua file berada di direktori yang sama atau atur base path.
+3. Untuk performa terbaik, gunakan .glb (single file).
+-->
+</body>
+</html>
