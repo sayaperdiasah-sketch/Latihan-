@@ -3,55 +3,130 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>✦ Tombol 3D Interaktif</title>
+    <title>✦ Planet 3D Interaktif</title>
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            margin: 0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #0b0e1a;
             overflow: hidden;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #fff;
         }
-        #info {
+
+        #info-panel {
             position: absolute;
-            bottom: 30px;
-            left: 0;
-            width: 100%;
-            text-align: center;
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 14px;
-            letter-spacing: 1px;
-            pointer-events: none;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-            z-index: 10;
-        }
-        #status {
-            position: absolute;
-            top: 30px;
+            bottom: 40px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            padding: 10px 28px;
-            border-radius: 40px;
-            color: #fff;
-            font-weight: 500;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            pointer-events: none;
-            z-index: 10;
-            font-size: 0.9rem;
+            background: rgba(10, 14, 30, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 24px;
+            padding: 24px 32px;
+            max-width: 480px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
             opacity: 0;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.5s ease, transform 0.4s ease;
+            transform: translateX(-50%) translateY(20px);
+            pointer-events: none;
+            z-index: 20;
         }
-        #status.show {
+        #info-panel.show {
             opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+        }
+        #info-panel h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #f0c27f, #fc5c7d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        #info-panel .sub {
+            font-size: 0.9rem;
+            color: #aab;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+        #info-panel p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #ccd;
+            font-weight: 300;
+        }
+        #info-panel .close-btn {
+            margin-top: 16px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            padding: 6px 20px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        #info-panel .close-btn:hover {
+            background: rgba(255,255,255,0.12);
+        }
+
+        #hint {
+            position: absolute;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.25);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        /* Tombol reset view (opsional) */
+        #reset-btn {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: #fff;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            z-index: 10;
+            transition: background 0.2s;
+        }
+        #reset-btn:hover {
+            background: rgba(255,255,255,0.12);
+        }
+
+        @media (max-width: 640px) {
+            #info-panel { padding: 20px; bottom: 30px; }
+            #info-panel h2 { font-size: 1.4rem; }
+            #hint { bottom: 100px; font-size: 0.7rem; }
         }
     </style>
 </head>
 <body>
 
-    <div id="status">✨ Tombol ditekan!</div>
-    <div id="info">🖱️ Klik tombolnya &bull; Geser untuk putar &bull; Gulung untuk zoom</div>
+    <!-- Panel Info -->
+    <div id="info-panel">
+        <h2 id="planet-name">Bumi</h2>
+        <div class="sub" id="planet-sub">🌍 Planet Biru</div>
+        <p id="planet-desc">Bumi adalah planet ketiga dari Matahari dan satu-satunya planet yang diketahui memiliki kehidupan.</p>
+        <button class="close-btn" id="close-info">Tutup</button>
+    </div>
 
-    <!-- Memuat Three.js dari CDN (Tool 3D) -->
+    <div id="hint">🪐 Klik planet untuk melihat info</div>
+    <button id="reset-btn">↺ Reset Kamera</button>
+
+    <!-- Impor Three.js -->
     <script type="importmap">
         {
             "imports": {
@@ -62,217 +137,253 @@
     </script>
 
     <script type="module">
-        // ----- 1. IMPOR TOOL -----
+        // ----- 1. IMPOR -----
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 
         // ----- 2. SETUP SCENE, CAMERA, RENDERER -----
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x0a0a1a); // Biru tua elegan
+        scene.background = new THREE.Color(0x0b0e1a);
 
-        // Kamera
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-        camera.position.set(4, 3, 6);
-        camera.lookAt(0, 0, 0);
+        const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(0, 3, 12);
 
-        // Renderer
+        // Renderer WebGL
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
         renderer.toneMappingExposure = 1.2;
         document.body.appendChild(renderer.domElement);
 
-        // Kontrol (bisa diputar)
+        // Renderer CSS2D untuk label (opsional, tapi kita pakai untuk info click)
+        // Kita tidak pakai label, kita pakai event click
+
+        // Controls
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.dampingFactor = 0.05;
         controls.autoRotate = true;
-        controls.autoRotateSpeed = 2.0;
-        controls.minDistance = 2.5;
-        controls.maxDistance = 12;
-        controls.target.set(0, 0.2, 0);
+        controls.autoRotateSpeed = 0.8;
+        controls.minDistance = 4;
+        controls.maxDistance = 20;
+        controls.target.set(0, 0, 0);
 
-        // ----- 3. PENCIPTAAN CAHAYA (Biar kinclong) -----
-        // Cahaya ambient lembut
-        const ambientLight = new THREE.AmbientLight(0x404060);
-        scene.add(ambientLight);
+        // ----- 3. LIGHTING -----
+        const ambient = new THREE.AmbientLight(0x404060);
+        scene.add(ambient);
 
-        // Cahaya utama dari depan
-        const mainLight = new THREE.DirectionalLight(0xffffff, 1.5);
-        mainLight.position.set(2, 5, 5);
+        const mainLight = new THREE.DirectionalLight(0xffffff, 2.5);
+        mainLight.position.set(5, 8, 6);
         mainLight.castShadow = true;
         scene.add(mainLight);
 
-        // Cahaya pengisi dari belakang
-        const backLight = new THREE.DirectionalLight(0x7b6eff, 0.8);
-        backLight.position.set(-3, 1, -4);
-        scene.add(backLight);
+        const fillLight = new THREE.DirectionalLight(0x7b6eff, 1.0);
+        fillLight.position.set(-4, 2, -3);
+        scene.add(fillLight);
 
-        // Lampu sorot warna-warni untuk efek
-        const colorLight = new THREE.PointLight(0xff4d6d, 0.6, 10);
-        colorLight.position.set(2, 1, 2);
-        scene.add(colorLight);
+        const rimLight = new THREE.DirectionalLight(0xff7eb3, 0.6);
+        rimLight.position.set(-2, -1, -5);
+        scene.add(rimLight);
 
-        const colorLight2 = new THREE.PointLight(0x4d9eff, 0.6, 10);
-        colorLight2.position.set(-2, 0.5, 2);
-        scene.add(colorLight2);
+        // Bintang latar (efek)
+        const starsGeo = new THREE.BufferGeometry();
+        const starsCount = 3000;
+        const starPos = new Float32Array(starsCount * 3);
+        for (let i = 0; i < starsCount * 3; i += 3) {
+            starPos[i] = (Math.random() - 0.5) * 200;
+            starPos[i+1] = (Math.random() - 0.5) * 200;
+            starPos[i+2] = (Math.random() - 0.5) * 200 - 50;
+        }
+        starsGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+        const starsMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.15, transparent: true, opacity: 0.8 });
+        const stars = new THREE.Points(starsGeo, starsMat);
+        scene.add(stars);
 
-        // ----- 4. LANTAI BAYANGAN (Biar tombol kelihatan nempel) -----
-        const floorGeometry = new THREE.PlaneGeometry(8, 8);
-        const floorMaterial = new THREE.ShadowMaterial({ opacity: 0.3, color: 0x000000 });
-        const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-        floor.rotation.x = -Math.PI / 2;
-        floor.position.y = -0.5;
-        floor.receiveShadow = true;
-        scene.add(floor);
+        // ----- 4. DATA PLANET -----
+        const planetData = [
+            {
+                name: 'Bumi',
+                sub: '🌍 Planet Biru',
+                desc: 'Bumi adalah planet ketiga dari Matahari dan satu-satunya planet yang diketahui memiliki kehidupan. Memiliki atmosfer yang kaya oksigen dan air cair.',
+                color: 0x2a6f8f,
+                emissive: 0x0a2a3a,
+                size: 1.0,
+                pos: [-2.8, 0, 0]
+            },
+            {
+                name: 'Mars',
+                sub: '🔴 Planet Merah',
+                desc: 'Mars adalah planet keempat dari Matahari. Dikenal sebagai "planet merah" karena oksida besi di permukaannya. Memiliki gunung tertinggi di tata surya, Olympus Mons.',
+                color: 0xc1440e,
+                emissive: 0x3a1a0a,
+                size: 0.8,
+                pos: [0, 0.2, 0]
+            },
+            {
+                name: 'Jupiter',
+                sub: '🟠 Raksasa Gas',
+                desc: 'Jupiter adalah planet terbesar di tata surya. Terkenal dengan Bintik Merah Besar-nya, sebuah badai raksasa yang telah berlangsung selama ratusan tahun.',
+                color: 0xd4a373,
+                emissive: 0x2a1a0a,
+                size: 1.6,
+                pos: [2.8, -0.3, 0]
+            }
+        ];
 
-        // ----- 5. BIKIN TOMBOL 3D (Objek utama) -----
-        const buttonGroup = new THREE.Group();
-        buttonGroup.position.y = 0;
+        // ----- 5. BUAT PLANET DAN TAMBAHKAN KE SCENE -----
+        const planets = [];
 
-        // --- 5a. Base (Bawah) ---
-        const baseGeo = new THREE.CylinderGeometry(1.4, 1.4, 0.4, 48);
-        const baseMat = new THREE.MeshStandardMaterial({
-            color: 0x2a2a4a,
-            metalness: 0.85,
-            roughness: 0.25,
-            emissive: 0x111122,
-            emissiveIntensity: 0.1
+        planetData.forEach((data, index) => {
+            // Buat sphere dengan tekstur sederhana (gradasi)
+            const geometry = new THREE.SphereGeometry(data.size, 64, 64);
+
+            // Buat material dengan warna dan sedikit emissive
+            const material = new THREE.MeshStandardMaterial({
+                color: data.color,
+                emissive: data.emissive,
+                emissiveIntensity: 0.2,
+                metalness: 0.1,
+                roughness: 0.6,
+            });
+
+            // Untuk Bumi, kita tambahkan tekstur dari internet (opsional)
+            // Tapi biar simpel, kita buat planet dengan pola yang menarik
+            // Sebenarnya kita bisa buat texture procedurally, tapi untuk demo ini kita pakai warna + sedikit detail
+
+            const mesh = new THREE.Mesh(geometry, material);
+            mesh.position.set(data.pos[0], data.pos[1], data.pos[2]);
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+            mesh.userData = { planetIndex: index }; // simpan index untuk identifikasi
+
+            scene.add(mesh);
+
+            // Simpan referensi planet beserta datanya
+            planets.push({
+                mesh: mesh,
+                data: data,
+                // Buat atmosfer tipis (glow) untuk Bumi dan Jupiter? Tidak wajib
+            });
+
+            // Tambahkan "cincin" untuk Jupiter
+            if (index === 2) { // Jupiter
+                const ringGeo = new THREE.TorusGeometry(data.size * 1.4, 0.06, 16, 64);
+                const ringMat = new THREE.MeshStandardMaterial({
+                    color: 0x8a6e4b,
+                    emissive: 0x2a1a0a,
+                    emissiveIntensity: 0.1,
+                    side: THREE.DoubleSide,
+                    transparent: true,
+                    opacity: 0.3
+                });
+                const ring = new THREE.Mesh(ringGeo, ringMat);
+                ring.position.copy(mesh.position);
+                ring.rotation.x = Math.PI / 2.5;
+                ring.rotation.z = 0.3;
+                scene.add(ring);
+                // Simpan ring untuk animasi (opsional)
+                mesh.userData.ring = ring;
+            }
+
+            // Tambahkan "bulan" kecil untuk Bumi (opsional)
+            if (index === 0) {
+                const moonGeo = new THREE.SphereGeometry(0.15, 16, 16);
+                const moonMat = new THREE.MeshStandardMaterial({ color: 0xaaaaaa, roughness: 0.8 });
+                const moon = new THREE.Mesh(moonGeo, moonMat);
+                moon.position.set(data.pos[0] + 1.5, data.pos[1] + 0.5, data.pos[2] + 0.2);
+                scene.add(moon);
+            }
         });
-        const base = new THREE.Mesh(baseGeo, baseMat);
-        base.position.y = 0;
-        base.castShadow = true;
-        base.receiveShadow = true;
-        buttonGroup.add(base);
 
-        // Ring aksen (cincin di tengah base)
-        const ringGeo = new THREE.TorusGeometry(1.1, 0.06, 16, 48);
-        const ringMat = new THREE.MeshStandardMaterial({
-            color: 0x7b6eff,
-            metalness: 0.9,
-            roughness: 0.2,
-            emissive: 0x3b2bff,
-            emissiveIntensity: 0.2
-        });
-        const ring = new THREE.Mesh(ringGeo, ringMat);
-        ring.position.y = 0.22;
-        ring.rotation.x = Math.PI / 2;
-        buttonGroup.add(ring);
-
-        // --- 5b. Tombol Atas (yang bisa ditekan) ---
-        const capGeo = new THREE.CylinderGeometry(0.9, 0.9, 0.35, 48);
-        const capMat = new THREE.MeshStandardMaterial({
-            color: 0x4f6ef7,
-            metalness: 0.3,
-            roughness: 0.4,
-            emissive: 0x1a2b9c,
-            emissiveIntensity: 0.15
-        });
-        const cap = new THREE.Mesh(capGeo, capMat);
-        cap.position.y = 0.4;
-        cap.castShadow = true;
-        cap.receiveShadow = true;
-        buttonGroup.add(cap);
-
-        // --- 5c. Lampu indikator kecil di atas tombol ---
-        const ledGeo = new THREE.SphereGeometry(0.12, 16, 16);
-        const ledMat = new THREE.MeshStandardMaterial({
-            color: 0x00ff88,
-            emissive: 0x00ff88,
-            emissiveIntensity: 1.5,
-            metalness: 0.1,
-            roughness: 0.1
-        });
-        const led = new THREE.Mesh(ledGeo, ledMat);
-        led.position.set(0, 0.6, 0.7);
-        buttonGroup.add(led);
-
-        // Tambahkan group ke scene
-        scene.add(buttonGroup);
-
-        // Simpan referensi cap dan led untuk animasi
-        const buttonCap = cap;
-        const ledLight = led;
-
-        // ----- 6. INTERAKSI KLIK (Raycaster) -----
+        // ----- 6. RAYCASTER UNTUK KLIK -----
         const raycaster = new THREE.Raycaster();
         const pointer = new THREE.Vector2();
 
-        // Ambil elemen status
-        const statusEl = document.getElementById('status');
+        // Elemen info panel
+        const infoPanel = document.getElementById('info-panel');
+        const planetName = document.getElementById('planet-name');
+        const planetSub = document.getElementById('planet-sub');
+        const planetDesc = document.getElementById('planet-desc');
+        const closeBtn = document.getElementById('close-info');
 
-        function onPointerDown(event) {
-            // Hitung posisi pointer (koordinat layar -1 sampai 1)
+        function showPlanetInfo(index) {
+            const data = planetData[index];
+            planetName.textContent = data.name;
+            planetSub.textContent = data.sub;
+            planetDesc.textContent = data.desc;
+            infoPanel.classList.add('show');
+        }
+
+        function hideInfo() {
+            infoPanel.classList.remove('show');
+        }
+
+        closeBtn.addEventListener('click', hideInfo);
+
+        // Event klik pada canvas
+        renderer.domElement.addEventListener('click', (event) => {
+            // Hitung posisi pointer
             const rect = renderer.domElement.getBoundingClientRect();
             pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
             pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
             raycaster.setFromCamera(pointer, camera);
 
-            // Cek apakah mengenai "cap" (tombol atas)
-            const intersects = raycaster.intersectObject(buttonCap);
+            // Ambil semua mesh planet (kita simpan di array planets)
+            const meshes = planets.map(p => p.mesh);
+            const intersects = raycaster.intersectObjects(meshes);
 
             if (intersects.length > 0) {
-                // ---- Tombol Ditekan! ----
-                // 1. Animasi turun
-                buttonCap.position.y = 0.25; // Turun
-                // 2. Ubah warna LED jadi merah
-                ledLight.material.color.setHex(0xff3366);
-                ledLight.material.emissive.setHex(0xff3366);
-                // 3. Tampilkan notifikasi
-                statusEl.textContent = '✨ Tombol ditekan!';
-                statusEl.classList.add('show');
-                // 4. Efek getar kecil (opsional)
-                buttonGroup.rotation.z = 0.03;
-                setTimeout(() => {
-                    buttonGroup.rotation.z = -0.03;
-                    setTimeout(() => {
-                        buttonGroup.rotation.z = 0;
-                    }, 50);
-                }, 50);
-
-                // Kembalikan ke posisi semula setelah 300ms
-                setTimeout(() => {
-                    buttonCap.position.y = 0.4; // Naik
-                    ledLight.material.color.setHex(0x00ff88);
-                    ledLight.material.emissive.setHex(0x00ff88);
-                    statusEl.classList.remove('show');
-                }, 300);
+                const hitMesh = intersects[0].object;
+                const index = hitMesh.userData.planetIndex;
+                if (index !== undefined) {
+                    showPlanetInfo(index);
+                    // Sedikit efek: planet yang diklik berkedip? Tidak, biar simpel
+                }
             }
-        }
+        });
 
-        // Event listener klik
-        renderer.domElement.addEventListener('click', onPointerDown);
+        // Reset kamera
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            camera.position.set(0, 3, 12);
+            controls.target.set(0, 0, 0);
+            controls.update();
+        });
 
-        // ----- 7. RESPONSIF (Ukuran layar berubah) -----
-        window.addEventListener('resize', onWindowResize, false);
-        function onWindowResize() {
+        // ----- 7. RESPONSIF -----
+        window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
-        }
+        });
 
         // ----- 8. LOOP ANIMASI -----
         function animate() {
             requestAnimationFrame(animate);
 
-            // Update kontrol (termasuk auto-rotate)
             controls.update();
 
-            // Animasi LED berkedip pelan (efek hidup)
-            const time = Date.now() * 0.001;
-            ledLight.material.emissiveIntensity = 1.0 + Math.sin(time * 2) * 0.5;
+            // Animasi rotasi planet (dan ring)
+            planets.forEach((p, idx) => {
+                p.mesh.rotation.y += 0.003;
+                if (p.mesh.userData.ring) {
+                    p.mesh.userData.ring.rotation.y += 0.001;
+                }
+            });
+
+            // Animasi bintang berputar sangat lambat
+            stars.rotation.y += 0.0001;
 
             renderer.render(scene, camera);
         }
 
         animate();
 
-        // Petunjuk di console
-        console.log('🚀 Tombol 3D siap! Klik tombol biru untuk mencoba.');
+        // Log
+        console.log('🚀 Planet 3D siap! Klik planet untuk info.');
     </script>
 </body>
 </html>
