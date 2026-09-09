@@ -3,9 +3,13 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>✦ Planet 3D Interaktif</title>
+    <title>✦ Planet 3D — Interaktif dengan Zoom & Info</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
             background: #0b0e1a;
@@ -13,118 +17,163 @@
             color: #fff;
         }
 
+        /* Panel info di sisi kiri */
         #info-panel {
             position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
+            top: 50%;
+            left: 40px;
+            transform: translateY(-50%);
+            width: 320px;
+            max-width: 70vw;
             background: rgba(10, 14, 30, 0.85);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 24px;
-            padding: 24px 32px;
-            max-width: 480px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 28px;
+            padding: 32px 28px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
             opacity: 0;
-            transition: opacity 0.5s ease, transform 0.4s ease;
-            transform: translateX(-50%) translateY(20px);
             pointer-events: none;
+            transition: opacity 0.5s ease, transform 0.4s ease;
+            transform: translateY(-50%) translateX(-20px);
             z-index: 20;
         }
         #info-panel.show {
             opacity: 1;
-            transform: translateX(-50%) translateY(0);
             pointer-events: auto;
+            transform: translateY(-50%) translateX(0);
+        }
+        #info-panel .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.06);
+            border: none;
+            color: #fff;
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 4px 12px;
+            border-radius: 40px;
+            transition: background 0.2s;
+            line-height: 1;
+        }
+        #info-panel .close-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
         }
         #info-panel h2 {
-            font-size: 1.8rem;
+            font-size: 2.2rem;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             background: linear-gradient(135deg, #f0c27f, #fc5c7d);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         #info-panel .sub {
-            font-size: 0.9rem;
+            font-size: 1rem;
             color: #aab;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
             letter-spacing: 1px;
         }
         #info-panel p {
             font-size: 1rem;
-            line-height: 1.6;
+            line-height: 1.7;
             color: #ccd;
             font-weight: 300;
         }
-        #info-panel .close-btn {
+        #info-panel .detail {
             margin-top: 16px;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: #fff;
-            padding: 6px 20px;
-            border-radius: 40px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        #info-panel .close-btn:hover {
-            background: rgba(255,255,255,0.12);
+            font-size: 0.85rem;
+            color: #8899bb;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding-top: 14px;
         }
 
+        /* Hint di tengah bawah */
         #hint {
             position: absolute;
-            bottom: 120px;
+            bottom: 40px;
             left: 50%;
             transform: translateX(-50%);
-            color: rgba(255,255,255,0.25);
-            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 0.85rem;
             letter-spacing: 2px;
             text-transform: uppercase;
             pointer-events: none;
             z-index: 5;
+            transition: opacity 0.6s;
+        }
+        #hint.hidden {
+            opacity: 0;
         }
 
-        /* Tombol reset view (opsional) */
+        /* Tombol reset (kembali) di pojok kanan atas */
         #reset-btn {
             position: absolute;
             top: 24px;
             right: 24px;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             color: #fff;
-            padding: 8px 18px;
+            padding: 8px 20px;
             border-radius: 40px;
             font-size: 0.8rem;
             cursor: pointer;
             backdrop-filter: blur(8px);
             z-index: 10;
             transition: background 0.2s;
+            display: none;
         }
         #reset-btn:hover {
-            background: rgba(255,255,255,0.12);
+            background: rgba(255, 255, 255, 0.12);
+        }
+        #reset-btn.visible {
+            display: block;
         }
 
         @media (max-width: 640px) {
-            #info-panel { padding: 20px; bottom: 30px; }
-            #info-panel h2 { font-size: 1.4rem; }
-            #hint { bottom: 100px; font-size: 0.7rem; }
+            #info-panel {
+                left: 20px;
+                right: 20px;
+                width: auto;
+                top: auto;
+                bottom: 30px;
+                transform: none;
+                border-radius: 20px;
+                padding: 24px 20px;
+                max-height: 60vh;
+                overflow-y: auto;
+            }
+            #info-panel.show {
+                transform: none;
+            }
+            #info-panel h2 {
+                font-size: 1.6rem;
+            }
+            #hint {
+                bottom: 100px;
+                font-size: 0.7rem;
+            }
+            #reset-btn {
+                top: 16px;
+                right: 16px;
+                padding: 6px 14px;
+                font-size: 0.7rem;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Panel Info -->
+    <!-- Panel info kiri -->
     <div id="info-panel">
+        <button class="close-btn" id="close-info">✕</button>
         <h2 id="planet-name">Bumi</h2>
         <div class="sub" id="planet-sub">🌍 Planet Biru</div>
         <p id="planet-desc">Bumi adalah planet ketiga dari Matahari dan satu-satunya planet yang diketahui memiliki kehidupan.</p>
-        <button class="close-btn" id="close-info">Tutup</button>
+        <div class="detail" id="planet-detail">Diameter: 12.742 km • Jarak: 1 AU</div>
     </div>
 
     <div id="hint">🪐 Klik planet untuk melihat info</div>
-    <button id="reset-btn">↺ Reset Kamera</button>
+    <button id="reset-btn">↺ Kembali</button>
 
     <!-- Impor Three.js -->
     <script type="importmap">
@@ -140,16 +189,14 @@
         // ----- 1. IMPOR -----
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-        import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 
         // ----- 2. SETUP SCENE, CAMERA, RENDERER -----
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x0b0e1a);
 
         const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 100);
-        camera.position.set(0, 3, 12);
+        camera.position.set(0, 2.5, 10);
 
-        // Renderer WebGL
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -158,16 +205,13 @@
         renderer.toneMappingExposure = 1.2;
         document.body.appendChild(renderer.domElement);
 
-        // Renderer CSS2D untuk label (opsional, tapi kita pakai untuk info click)
-        // Kita tidak pakai label, kita pakai event click
-
-        // Controls
+        // Controls (kita akan override posisi kamera saat animasi)
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
-        controls.dampingFactor = 0.05;
+        controls.dampingFactor = 0.08;
         controls.autoRotate = true;
-        controls.autoRotateSpeed = 0.8;
-        controls.minDistance = 4;
+        controls.autoRotateSpeed = 0.6;
+        controls.minDistance = 3;
         controls.maxDistance = 20;
         controls.target.set(0, 0, 0);
 
@@ -188,7 +232,7 @@
         rimLight.position.set(-2, -1, -5);
         scene.add(rimLight);
 
-        // Bintang latar (efek)
+        // Bintang latar
         const starsGeo = new THREE.BufferGeometry();
         const starsCount = 3000;
         const starPos = new Float32Array(starsCount * 3);
@@ -198,49 +242,46 @@
             starPos[i+2] = (Math.random() - 0.5) * 200 - 50;
         }
         starsGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
-        const starsMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.15, transparent: true, opacity: 0.8 });
+        const starsMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.12, transparent: true, opacity: 0.6 });
         const stars = new THREE.Points(starsGeo, starsMat);
         scene.add(stars);
 
         // ----- 4. DATA PLANET -----
-        const planetData = [
-            {
-                name: 'Bumi',
-                sub: '🌍 Planet Biru',
-                desc: 'Bumi adalah planet ketiga dari Matahari dan satu-satunya planet yang diketahui memiliki kehidupan. Memiliki atmosfer yang kaya oksigen dan air cair.',
-                color: 0x2a6f8f,
-                emissive: 0x0a2a3a,
-                size: 1.0,
-                pos: [-2.8, 0, 0]
-            },
-            {
-                name: 'Mars',
-                sub: '🔴 Planet Merah',
-                desc: 'Mars adalah planet keempat dari Matahari. Dikenal sebagai "planet merah" karena oksida besi di permukaannya. Memiliki gunung tertinggi di tata surya, Olympus Mons.',
-                color: 0xc1440e,
-                emissive: 0x3a1a0a,
-                size: 0.8,
-                pos: [0, 0.2, 0]
-            },
-            {
-                name: 'Jupiter',
-                sub: '🟠 Raksasa Gas',
-                desc: 'Jupiter adalah planet terbesar di tata surya. Terkenal dengan Bintik Merah Besar-nya, sebuah badai raksasa yang telah berlangsung selama ratusan tahun.',
-                color: 0xd4a373,
-                emissive: 0x2a1a0a,
-                size: 1.6,
-                pos: [2.8, -0.3, 0]
-            }
-        ];
+        const planetData = [{
+            name: 'Bumi',
+            sub: '🌍 Planet Biru',
+            desc: 'Bumi adalah planet ketiga dari Matahari dan satu-satunya planet yang diketahui memiliki kehidupan. Memiliki atmosfer kaya oksigen dan air cair.',
+            detail: 'Diameter: 12.742 km • Jarak: 1 AU',
+            color: 0x2a6f8f,
+            emissive: 0x0a2a3a,
+            size: 1.0,
+            pos: [-2.8, 0.2, 0]
+        }, {
+            name: 'Mars',
+            sub: '🔴 Planet Merah',
+            desc: 'Mars adalah planet keempat dari Matahari. Dikenal sebagai "planet merah" karena oksida besi di permukaannya. Memiliki gunung tertinggi, Olympus Mons.',
+            detail: 'Diameter: 6.779 km • Jarak: 1.5 AU',
+            color: 0xc1440e,
+            emissive: 0x3a1a0a,
+            size: 0.8,
+            pos: [0, 0.4, 0]
+        }, {
+            name: 'Jupiter',
+            sub: '🟠 Raksasa Gas',
+            desc: 'Jupiter adalah planet terbesar di tata surya. Terkenal dengan Bintik Merah Besar, badai raksasa yang telah berlangsung selama ratusan tahun.',
+            detail: 'Diameter: 139.820 km • Jarak: 5.2 AU',
+            color: 0xd4a373,
+            emissive: 0x2a1a0a,
+            size: 1.6,
+            pos: [2.8, -0.2, 0]
+        }];
 
-        // ----- 5. BUAT PLANET DAN TAMBAHKAN KE SCENE -----
+        // ----- 5. BUAT PLANET -----
         const planets = [];
+        const planetMeshes = [];
 
         planetData.forEach((data, index) => {
-            // Buat sphere dengan tekstur sederhana (gradasi)
             const geometry = new THREE.SphereGeometry(data.size, 64, 64);
-
-            // Buat material dengan warna dan sedikit emissive
             const material = new THREE.MeshStandardMaterial({
                 color: data.color,
                 emissive: data.emissive,
@@ -248,28 +289,23 @@
                 metalness: 0.1,
                 roughness: 0.6,
             });
-
-            // Untuk Bumi, kita tambahkan tekstur dari internet (opsional)
-            // Tapi biar simpel, kita buat planet dengan pola yang menarik
-            // Sebenarnya kita bisa buat texture procedurally, tapi untuk demo ini kita pakai warna + sedikit detail
-
             const mesh = new THREE.Mesh(geometry, material);
             mesh.position.set(data.pos[0], data.pos[1], data.pos[2]);
             mesh.castShadow = true;
             mesh.receiveShadow = true;
-            mesh.userData = { planetIndex: index }; // simpan index untuk identifikasi
-
+            mesh.userData = { planetIndex: index };
             scene.add(mesh);
+            planetMeshes.push(mesh);
 
-            // Simpan referensi planet beserta datanya
+            // Simpan data lengkap
             planets.push({
                 mesh: mesh,
                 data: data,
-                // Buat atmosfer tipis (glow) untuk Bumi dan Jupiter? Tidak wajib
+                initialPos: new THREE.Vector3(data.pos[0], data.pos[1], data.pos[2]),
             });
 
-            // Tambahkan "cincin" untuk Jupiter
-            if (index === 2) { // Jupiter
+            // Cincin untuk Jupiter
+            if (index === 2) {
                 const ringGeo = new THREE.TorusGeometry(data.size * 1.4, 0.06, 16, 64);
                 const ringMat = new THREE.MeshStandardMaterial({
                     color: 0x8a6e4b,
@@ -284,106 +320,241 @@
                 ring.rotation.x = Math.PI / 2.5;
                 ring.rotation.z = 0.3;
                 scene.add(ring);
-                // Simpan ring untuk animasi (opsional)
                 mesh.userData.ring = ring;
-            }
-
-            // Tambahkan "bulan" kecil untuk Bumi (opsional)
-            if (index === 0) {
-                const moonGeo = new THREE.SphereGeometry(0.15, 16, 16);
-                const moonMat = new THREE.MeshStandardMaterial({ color: 0xaaaaaa, roughness: 0.8 });
-                const moon = new THREE.Mesh(moonGeo, moonMat);
-                moon.position.set(data.pos[0] + 1.5, data.pos[1] + 0.5, data.pos[2] + 0.2);
-                scene.add(moon);
+                planets[index].ring = ring;
+                planets[index].initialRingPos = ring.position.clone();
             }
         });
 
-        // ----- 6. RAYCASTER UNTUK KLIK -----
-        const raycaster = new THREE.Raycaster();
-        const pointer = new THREE.Vector2();
+        // ----- 6. STATE UNTUK ANIMASI ZOOM & GESER -----
+        let isAnimating = false;
+        let animProgress = 0;
+        let animDuration = 1.2; // detik
 
-        // Elemen info panel
+        // Posisi awal kamera dan target
+        const initialCamPos = new THREE.Vector3(0, 2.5, 10);
+        const initialTarget = new THREE.Vector3(0, 0, 0);
+
+        // Target posisi kamera dan planet saat zoom
+        let targetCamPos = new THREE.Vector3();
+        let targetPlanetPos = new THREE.Vector3();
+        let targetRingPos = new THREE.Vector3(); // untuk cincin Jupiter
+        let selectedPlanetIndex = -1;
+        let isZoomed = false;
+
+        // Simpan posisi awal planet
+        const initialPlanetPositions = planets.map(p => p.initialPos.clone());
+
+        // Elemen UI
         const infoPanel = document.getElementById('info-panel');
         const planetName = document.getElementById('planet-name');
         const planetSub = document.getElementById('planet-sub');
         const planetDesc = document.getElementById('planet-desc');
+        const planetDetail = document.getElementById('planet-detail');
         const closeBtn = document.getElementById('close-info');
+        const resetBtn = document.getElementById('reset-btn');
+        const hintEl = document.getElementById('hint');
 
-        function showPlanetInfo(index) {
-            const data = planetData[index];
-            planetName.textContent = data.name;
-            planetSub.textContent = data.sub;
-            planetDesc.textContent = data.desc;
-            infoPanel.classList.add('show');
-        }
+        // ----- 7. FUNGSI ZOOM IN -----
+        function zoomToPlanet(index) {
+            if (isAnimating || isZoomed) return;
+            const planet = planets[index];
+            if (!planet) return;
 
-        function hideInfo() {
+            selectedPlanetIndex = index;
+            isZoomed = true;
+            isAnimating = true;
+            animProgress = 0;
+
+            // Hitung posisi target: planet di kanan (x=3.5) dan kamera di depan kiri
+            // Kita ingin planet berada di koordinat (3.5, 0, 0)
+            const offsetX = 3.8;
+            const targetPos = new THREE.Vector3(offsetX, 0, 0);
+            targetPlanetPos.copy(targetPos);
+            if (planet.ring) {
+                targetRingPos.copy(targetPos);
+            }
+
+            // Posisi kamera: di kiri depan agak tinggi
+            targetCamPos.set(-4.5, 1.8, 5.5);
+
+            // Sembunyikan hint
+            hintEl.classList.add('hidden');
+
+            // Tampilkan tombol reset
+            resetBtn.classList.add('visible');
+
+            // Sembunyikan panel info dulu (akan muncul setelah animasi selesai)
             infoPanel.classList.remove('show');
         }
 
-        closeBtn.addEventListener('click', hideInfo);
+        // ----- 8. FUNGSI RESET (kembali ke semula) -----
+        function resetView() {
+            if (isAnimating || !isZoomed) return;
+            isAnimating = true;
+            animProgress = 0;
 
-        // Event klik pada canvas
+            // Kembalikan posisi planet ke awal
+            const idx = selectedPlanetIndex;
+            if (idx !== -1) {
+                const p = planets[idx];
+                targetPlanetPos.copy(p.initialPos);
+                if (p.ring) {
+                    targetRingPos.copy(p.initialRingPos);
+                }
+            }
+
+            // Kembalikan kamera ke awal
+            targetCamPos.copy(initialCamPos);
+
+            // Sembunyikan panel info
+            infoPanel.classList.remove('show');
+
+            // Sembunyikan tombol reset setelah animasi selesai (di akhir)
+            // Kita set flag isZoomed = false di akhir animasi
+        }
+
+        // ----- 9. RAYCASTER UNTUK KLIK -----
+        const raycaster = new THREE.Raycaster();
+        const pointer = new THREE.Vector2();
+
         renderer.domElement.addEventListener('click', (event) => {
-            // Hitung posisi pointer
+            if (isAnimating) return;
             const rect = renderer.domElement.getBoundingClientRect();
             pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
             pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
             raycaster.setFromCamera(pointer, camera);
-
-            // Ambil semua mesh planet (kita simpan di array planets)
-            const meshes = planets.map(p => p.mesh);
-            const intersects = raycaster.intersectObjects(meshes);
+            const intersects = raycaster.intersectObjects(planetMeshes);
 
             if (intersects.length > 0) {
-                const hitMesh = intersects[0].object;
-                const index = hitMesh.userData.planetIndex;
-                if (index !== undefined) {
-                    showPlanetInfo(index);
-                    // Sedikit efek: planet yang diklik berkedip? Tidak, biar simpel
+                const hit = intersects[0].object;
+                const idx = hit.userData.planetIndex;
+                if (idx !== undefined && !isZoomed) {
+                    zoomToPlanet(idx);
                 }
             }
         });
 
-        // Reset kamera
-        document.getElementById('reset-btn').addEventListener('click', () => {
-            camera.position.set(0, 3, 12);
-            controls.target.set(0, 0, 0);
-            controls.update();
+        // ----- 10. EVENT UI -----
+        closeBtn.addEventListener('click', () => {
+            if (isZoomed && !isAnimating) {
+                resetView();
+            }
         });
 
-        // ----- 7. RESPONSIF -----
+        resetBtn.addEventListener('click', () => {
+            if (isZoomed && !isAnimating) {
+                resetView();
+            }
+        });
+
+        // ----- 11. RESPONSIF -----
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // ----- 8. LOOP ANIMASI -----
-        function animate() {
+        // ----- 12. LOOP ANIMASI UTAMA -----
+        function animate(time) {
             requestAnimationFrame(animate);
 
-            controls.update();
+            // Update animasi jika sedang berlangsung
+            if (isAnimating) {
+                animProgress += 0.016 / animDuration; // asumsi 60fps
+                if (animProgress >= 1) {
+                    animProgress = 1;
+                    isAnimating = false;
 
-            // Animasi rotasi planet (dan ring)
+                    // Jika selesai zoom in, tampilkan info
+                    if (isZoomed) {
+                        const idx = selectedPlanetIndex;
+                        if (idx !== -1) {
+                            const data = planetData[idx];
+                            planetName.textContent = data.name;
+                            planetSub.textContent = data.sub;
+                            planetDesc.textContent = data.desc;
+                            planetDetail.textContent = data.detail;
+                            infoPanel.classList.add('show');
+                        }
+                    } else {
+                        // Selesai reset
+                        isZoomed = false;
+                        selectedPlanetIndex = -1;
+                        resetBtn.classList.remove('visible');
+                        hintEl.classList.remove('hidden');
+                        // Pastikan panel info tertutup
+                        infoPanel.classList.remove('show');
+                    }
+                }
+
+                // Interpolasi posisi kamera dan planet
+                const t = easeInOutCubic(animProgress);
+
+                // Kamera
+                camera.position.lerpVectors(
+                    isZoomed ? initialCamPos : targetCamPos,
+                    isZoomed ? targetCamPos : initialCamPos,
+                    t
+                );
+                // Target controls (kita set target ke posisi planet yang bergerak)
+                const currentPlanetPos = new THREE.Vector3();
+                const idx = selectedPlanetIndex !== -1 ? selectedPlanetIndex : 0;
+                // Untuk planet yang dipilih (atau planet pertama)
+                const p = planets[idx];
+                const startPos = isZoomed ? p.initialPos : targetPlanetPos;
+                const endPos = isZoomed ? targetPlanetPos : p.initialPos;
+                currentPlanetPos.lerpVectors(startPos, endPos, t);
+
+                // Gerakkan planet yang dipilih
+                if (selectedPlanetIndex !== -1) {
+                    const pIdx = selectedPlanetIndex;
+                    const planet = planets[pIdx];
+                    planet.mesh.position.copy(currentPlanetPos);
+                    if (planet.ring) {
+                        const ringStart = isZoomed ? planet.initialRingPos : targetRingPos;
+                        const ringEnd = isZoomed ? targetRingPos : planet.initialRingPos;
+                        const ringPos = new THREE.Vector3().lerpVectors(ringStart, ringEnd, t);
+                        planet.ring.position.copy(ringPos);
+                    }
+                }
+
+                // Update controls target ke posisi planet yang bergerak (agar kamera fokus)
+                controls.target.copy(currentPlanetPos);
+                controls.update();
+
+            } else {
+                // Saat idle, update controls biasa
+                controls.update();
+            }
+
+            // Rotasi planet
             planets.forEach((p, idx) => {
-                p.mesh.rotation.y += 0.003;
-                if (p.mesh.userData.ring) {
-                    p.mesh.userData.ring.rotation.y += 0.001;
+                p.mesh.rotation.y += 0.004;
+                if (p.ring) {
+                    p.ring.rotation.y += 0.001;
                 }
             });
 
-            // Animasi bintang berputar sangat lambat
             stars.rotation.y += 0.0001;
 
             renderer.render(scene, camera);
         }
 
+        // Easing function
+        function easeInOutCubic(x) {
+            return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+        }
+
         animate();
 
-        // Log
-        console.log('🚀 Planet 3D siap! Klik planet untuk info.');
+        // Inisialisasi posisi target awal
+        targetCamPos.copy(initialCamPos);
+        targetPlanetPos.set(3.8, 0, 0);
+        targetRingPos.set(3.8, 0, 0);
+
+        console.log('🚀 Planet 3D siap! Klik planet untuk zoom & info.');
     </script>
 </body>
 </html>
